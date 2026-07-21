@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Auto-Ficha PRO — agora por assinatura</title>
+<!-- página que SUBSTITUI o material grátis antigo (index/andre/guia/apresentação/demonstração/instalar).
+     Mostra o aviso e encaminha pra landing do produto. Publicada por RODAR-build-docs.sh. -->
+<meta http-equiv="refresh" content="8; url=comercial/venda.html">
+<style>
+  :root { --bg:#060e13; --card:#0e1e28; --teal:#14b8a6; --teal2:#2dd4bf; --teal-deep:#0f766e;
+    --ink:#e7f0ee; --mut:#8fa8a3; --gold:#fbbf24; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--ink); min-height:100vh; display:flex; align-items:center; justify-content:center;
+    font-family:"Instrument Sans",-apple-system,"Segoe UI",system-ui,Arial,sans-serif; line-height:1.6; padding:24px; }
+  .glow { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; }
+  .glow.a { width:560px; height:560px; background:rgba(20,184,166,.14); top:-200px; right:-160px; }
+  .glow.b { width:480px; height:480px; background:rgba(15,118,110,.12); bottom:-200px; left:-160px; }
+  .card { position:relative; z-index:1; background:linear-gradient(180deg,var(--card),#0a1720);
+    border:1px solid rgba(45,212,191,.18); border-radius:24px; max-width:520px; width:100%; padding:44px 38px; text-align:center;
+    box-shadow:0 40px 100px -30px rgba(0,0,0,.8), 0 0 70px -30px rgba(20,184,166,.3); }
+  .lock { font-size:44px; margin-bottom:14px; }
+  .kick { font-family:"Spline Sans Mono",monospace; font-size:11.5px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--teal2); margin-bottom:14px; }
+  .kick::before { content:""; display:inline-block; width:24px; height:1px; background:var(--gold); vertical-align:middle; margin-right:9px; }
+  h1 { font-family:"Fraunces",Georgia,serif; font-weight:600; font-size:27px; line-height:1.2; letter-spacing:-.01em; margin-bottom:16px; }
+  h1 em { font-style:italic; color:var(--gold); }
+  p { color:var(--mut); font-size:15px; margin-bottom:14px; }
+  p b { color:var(--ink); }
+  .bt { display:inline-block; margin-top:12px; background:linear-gradient(135deg,var(--teal2),var(--teal-deep)); color:#03110e;
+    text-decoration:none; font-weight:700; font-size:16px; padding:15px 30px; border-radius:13px;
+    box-shadow:0 0 0 1px rgba(45,212,191,.4), 0 16px 40px -12px rgba(20,184,166,.55); }
+  .small { margin-top:20px; font-size:12.5px; color:#64748b; }
+  .small b { color:var(--mut); }
+  .sig { margin-top:26px; padding-top:18px; border-top:1px solid rgba(148,163,184,.14); font-size:12px; color:#5a6f6a; }
+</style>
+</head>
+<body>
+  <div class="glow a"></div><div class="glow b"></div>
+  <div class="card">
+    <div class="lock">🔐</div>
+    <div class="kick">Aviso importante</div>
+    <h1>O Auto-Ficha agora é um produto <em>por assinatura</em>.</h1>
+    <p>Manter a ferramenta no ar — o armazenamento e as atualizações constantes conforme o SOC muda —
+    passou a ter um custo alto para seguir <b>gratuita</b>.</p>
+    <p>Para gerar os recursos necessários que mantêm o Auto-Ficha <b>funcionando e evoluindo</b>,
+    o acesso passou a ter uma mensalidade.</p>
+    <a class="bt" href="comercial/venda.html">Conhecer o Auto-Ficha PRO →</a>
+    <div class="small">Você será encaminhado automaticamente em instantes.<br>
+    Já é assinante? Use o favorito do seu <b>e-mail de acesso</b>.</div>
+    <div class="sig">Dr. André Rodrigues · CRM 5201261541-RJ</div>
+  </div>
+</body>
+</html>

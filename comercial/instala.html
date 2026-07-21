@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Auto-Ficha PRO — Instalar o meu acesso</title>
+<style>
+  :root { --teal:#0f766e; --teal-dark:#0c544d; --ink:#0f172a; --muted:#475569; --line:#e2e8f0; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,"Segoe UI",system-ui,Arial,sans-serif; color:var(--ink); background:#f8fafc; line-height:1.55; }
+  .wrap { max-width:680px; margin:0 auto; padding:40px 24px 80px; }
+  header { text-align:center; margin-bottom:22px; }
+  h1 { color:var(--teal); margin:0 0 6px; font-size:26px; }
+  .sub { color:var(--muted); font-size:15px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:24px; margin:16px 0; box-shadow:0 2px 10px rgba(0,0,0,.04); }
+  h2 { font-size:18px; margin:0 0 12px; }
+  .passo { display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%;
+    background:var(--teal); color:#fff; font-size:14px; font-weight:800; margin-right:8px; vertical-align:-4px; }
+  .fav { display:inline-block; background:linear-gradient(135deg,#0f766e,#0c544d); color:#fff; text-decoration:none;
+    font-weight:700; font-size:17px; padding:16px 28px; border-radius:12px; cursor:grab; user-select:none; -webkit-user-select:none;
+    box-shadow:0 8px 20px -6px rgba(15,118,110,.5); animation:pulso 2.4s ease-in-out infinite; }
+  .fav:active { cursor:grabbing; }
+  @keyframes pulso { 0%,100%{ box-shadow:0 8px 20px -6px rgba(15,118,110,.5);} 50%{ box-shadow:0 10px 30px -4px rgba(15,118,110,.75);} }
+  .favbox { text-align:center; padding:16px 0 4px; }
+  .hint { font-size:13px; color:var(--muted); }
+  #naoclique { display:none; margin-top:10px; font-size:13.5px; font-weight:700; color:#b45309; }
+  kbd { background:#f1f5f9; border:1px solid var(--line); border-bottom-width:2px; border-radius:6px; padding:1px 7px; font-size:13px; font-family:inherit; }
+  .atalho { font-size:15px; }
+  .atalho .destaque { background:#ecfdf5; border:1px solid #a7f3d0; border-radius:8px; padding:8px 12px; display:inline-block; font-weight:600; }
+  .atalho .outro { color:var(--muted); font-size:13px; margin-top:6px; }
+  .warn { background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:14px 16px; font-size:14px; color:#92400e; }
+  .priv { background:#ecfeff; border:1px solid #a5f3fc; border-radius:10px; padding:12px 16px; font-size:13.5px; color:#0e7490; margin-bottom:16px; }
+  .porque { background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:12px 16px; font-size:13px; color:var(--muted); margin-top:14px; }
+  code { background:#f1f5f9; padding:2px 6px; border-radius:5px; font-size:12px; word-break:break-all; }
+  #semlic { display:none; background:#fee2e2; border:1px solid #fca5a5; color:#991b1b; border-radius:10px; padding:16px; font-size:14.5px; }
+  #mobilewarn { display:none; background:#fef3c7; border:1px solid #fcd34d; color:#92400e; border-radius:12px; padding:16px 18px; font-size:14.5px; margin-bottom:16px; }
+  ol { margin:0; padding-left:20px; } li { margin:7px 0; }
+  .vel { background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:11px 14px; font-size:13px; color:#065f46; margin-top:12px; }
+
+  /* ---------- cena animada: como arrastar ---------- */
+  .scene { display:flex; justify-content:center; margin-top:18px; }
+  .mockup { position:relative; width:360px; max-width:100%; height:210px; background:#fff; border:1px solid #cbd5e1;
+    border-radius:12px; overflow:hidden; box-shadow:0 10px 30px -12px rgba(15,23,42,.25); }
+  .mock-top { height:34px; background:#f1f5f9; border-bottom:1px solid var(--line); display:flex; align-items:center; padding:0 10px; gap:6px; }
+  .mock-top i { width:9px; height:9px; border-radius:50%; background:#cbd5e1; }
+  .mock-top i:nth-child(1){ background:#fda4af; } .mock-top i:nth-child(2){ background:#fcd34d; } .mock-top i:nth-child(3){ background:#86efac; }
+  .mock-url { flex:1; height:18px; margin-left:6px; background:#fff; border:1px solid var(--line); border-radius:9px;
+    font-size:10px; color:#94a3b8; display:flex; align-items:center; padding:0 8px; }
+  .mock-favbar { height:30px; background:#fafafa; border-bottom:1px solid var(--line); display:flex; align-items:center; padding:0 10px; gap:10px; font-size:11px; color:#64748b; }
+  .mock-slot { position:relative; height:20px; min-width:118px; border:1.5px dashed #94a3b8; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:10px; color:#94a3b8; }
+  .mock-slot::after { content:"solte aqui"; }
+  .mock-body { position:relative; height:calc(100% - 64px); background:linear-gradient(180deg,#fff, #f8fafc); }
+  .mock-origem { position:absolute; left:50%; top:58%; transform:translate(-50%,-50%); background:#e6f4f2; color:#8ab5b0;
+    border:1px dashed #99c4bf; font-size:11px; font-weight:700; padding:8px 14px; border-radius:8px; }
+  .ghost { position:absolute; left:50%; top:58%; margin-left:-56px; margin-top:-14px; background:linear-gradient(135deg,#0f766e,#0c544d);
+    color:#fff; font-size:11px; font-weight:700; padding:8px 14px; border-radius:8px; box-shadow:0 8px 18px -6px rgba(15,118,110,.6);
+    animation:arrasto 3.6s ease-in-out infinite; pointer-events:none; white-space:nowrap; }
+  .dedo { position:absolute; left:50%; top:58%; margin-left:24px; margin-top:2px; font-size:20px; animation:arrasto 3.6s ease-in-out infinite; pointer-events:none; }
+  /* destino ≈ slot da favbar: sobe ~92px e recua ~68px à esquerda (mockup fixo) */
+  @keyframes arrasto {
+    0%   { transform:translate(0,0); opacity:0; }
+    12%  { transform:translate(0,0); opacity:1; }
+    58%  { transform:translate(-68px,-96px); opacity:1; }
+    72%  { transform:translate(-68px,-96px); opacity:1; }
+    82%  { transform:translate(-68px,-96px); opacity:0; }
+    100% { transform:translate(0,0); opacity:0; }
+  }
+  .mock-slot i { position:absolute; inset:-1.5px; border-radius:6px; border:1.5px solid transparent; animation:acende 3.6s ease-in-out infinite; }
+  @keyframes acende {
+    0%,50% { border-color:transparent; background:transparent; }
+    60%,74% { border-color:#10b981; background:#d1fae5; }
+    84%,100% { border-color:transparent; background:transparent; }
+  }
+  @media (prefers-reduced-motion: reduce) { .ghost,.dedo,.mock-slot i,.fav { animation:none; } .ghost,.dedo { display:none; } }
+
+  details { margin-top:14px; }
+  summary { cursor:pointer; font-weight:600; color:var(--teal); font-size:14.5px; }
+  .planob { margin-top:12px; font-size:14px; }
+  .btncopia { background:var(--teal); color:#fff; border:0; border-radius:8px; font-weight:700; font-size:13.5px; padding:9px 16px; cursor:pointer; }
+  .btncopia.ok { background:#059669; }
+  .rodape { text-align:center; color:#94a3b8; font-size:12.5px; margin-top:26px; }
+  .rodape a { color:#64748b; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Auto-Ficha <span style="font-size:15px;vertical-align:middle;background:#0f766e;color:#fff;padding:2px 8px;border-radius:6px">PRO</span></h1>
+    <div class="sub">Instalação do <b>seu</b> acesso pessoal — leva menos de 1 minuto, uma vez só por computador.</div>
+  </header>
+
+  <div id="semlic">Este link está incompleto (sem a licença). Abra o botão <b>“Instalar meu Auto-Ficha”</b>
+  que está no e-mail que você recebeu — é ele que carrega o seu acesso.</div>
+
+  <div id="mobilewarn">📱 <b>Você abriu este link no celular.</b> O Auto-Ficha PRO se instala no
+  <b>computador em que você atende pelo SOC</b>. Abra este mesmo e-mail lá e siga os passos — aqui pelo
+  celular não dá pra concluir.</div>
+
+  <div id="tudo">
+    <div class="priv">🔒 <b>Acesso pessoal e intransferível</b> — vinculado ao seu CPF. Não repasse este link:
+    todo desbloqueio fica registrado e uso simultâneo leva a bloqueio.</div>
+
+    <div class="card">
+      <h2><span class="passo">1</span>Deixe a barra de favoritos visível</h2>
+      <div class="atalho">
+        <span class="destaque" id="atalho-principal">Pressione <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>B</kbd></span>
+        <div class="outro" id="atalho-outro">No Windows: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>B</kbd></div>
+      </div>
+      <p class="hint" style="margin-bottom:0">Se a barra já aparece logo abaixo do endereço do site, pule pro passo 2.</p>
+    </div>
+
+    <div class="card">
+      <h2><span class="passo">2</span>Segure e arraste o botão verde até a barra</h2>
+      <div class="favbox">
+        <a class="fav" id="botao" href="#" draggable="true">⬩ Meu Auto-Ficha PRO</a>
+        <div id="naoclique">☝️ É pra <u>arrastar</u> até a barra de favoritos, não clicar 😉</div>
+        <p class="hint">Clique <b>segurando</b> o botão, leve até a barra de favoritos (lá em cima) e solte.</p>
+      </div>
+      <div class="scene" aria-hidden="true">
+        <div class="mockup">
+          <div class="mock-top"><i></i><i></i><i></i><div class="mock-url">seu navegador</div></div>
+          <div class="mock-favbar">★ Favoritos <span class="mock-slot"><i></i></span></div>
+          <div class="mock-body">
+            <div class="mock-origem">⬩ Meu Auto-Ficha PRO</div>
+            <div class="ghost">⬩ Meu Auto-Ficha PRO</div>
+            <div class="dedo">👆</div>
+          </div>
+        </div>
+      </div>
+      <div class="porque">💡 <b>Por que arrastar?</b> Por segurança, nenhum site consegue criar favoritos sozinho
+      no seu navegador — é uma regra do Chrome/Edge/Firefox, não do Auto-Ficha. O gesto é seu, uma única vez.
+      Vai atender em outro computador? Abra o mesmo e-mail lá e repita.</div>
+      <details>
+        <summary>O arrastar não funcionou? Plano B (30 segundos)</summary>
+        <div class="planob">
+          <ol>
+            <li>Toque no botão abaixo pra copiar o código do seu acesso:<br><br>
+              <button class="btncopia" id="copiar">📋 Copiar o código do meu acesso</button></li>
+            <li>Clique com o <b>botão direito</b> na barra de favoritos → <b>“Adicionar página…”</b>
+              (no Edge: “Adicionar este site aos favoritos”).</li>
+            <li>Em <b>Nome</b>, escreva <code>Meu Auto-Ficha PRO</code>. Em <b>URL</b>, apague o que estiver lá e <b>cole</b> o código (Ctrl+V / ⌘V). Salve.</li>
+          </ol>
+          <p class="hint">Prefere ver o código? <a href="#" id="vercodigo">mostrar</a></p>
+          <code id="codigo" style="display:none"></code>
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2><span class="passo">3</span>Use no SOC</h2>
+      <ol>
+        <li>Abra o atendimento no SOC e clique no favorito <b>Meu Auto-Ficha PRO</b>.</li>
+        <li>Digite o seu <b>PIN</b> — o acesso libera por <b>4 horas</b> (timer no topo do painel).</li>
+        <li>Fluxo: ① Liberar resultado → ③ Liberar ASO → ④ Assinatura (1 clique seu no "Iniciar Assinatura").</li>
+        <li><b>Confira tudo</b> antes de cada salvamento — a responsabilidade clínica é sua.</li>
+      </ol>
+      <div class="vel">⚡ O <b>primeiro</b> clique do favorito baixa a versão mais recente (alguns segundos, aparece
+      “⏳ carregando…”). Dali em diante ele <b>abre na hora</b> — e se atualiza sozinho por trás.</div>
+    </div>
+  </div>
+
+  <div class="rodape">Dúvida na instalação? <a href="mailto:suporte@autofichapro.com.br">suporte@autofichapro.com.br</a></div>
+</div>
+
+<script>
+  // 🔒 O favorito é só a CHAVE: ele não contém o produto. O código vem do servidor de
+  // licenças (?js=1&lic=…) e só sai pra licença ATIVA e no prazo. O favorito v2 guarda a
+  // última cópia boa no computador do assinante: clicou → abre NA HORA do cache e, por
+  // trás, revalida no servidor — licença vencida/bloqueada recebe o STUB, que fecha o
+  // painel e apaga os vestígios (kill-switch igual ao de antes, só que sem fila de espera).
+  var q = new URLSearchParams(location.search);
+  var lic = (q.get("lic") || "").replace(/[^a-zA-Z0-9]/g, "");
+  var tkt = (q.get("t") || "").replace(/[^a-zA-Z0-9]/g, "");   // 🎫 ticket da Minha Conta (vale 10 min)
+  var gas = q.get("u") || "";
+
+  // celular: dá pra ler, não dá pra instalar — avisa sem esconder o passo a passo
+  if (/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)) {
+    document.getElementById("mobilewarn").style.display = "block";
+  }
+  // destaca o atalho do sistema da pessoa (Mac × Windows)
+  if (!/Mac/i.test(navigator.platform || navigator.userAgent)) {
+    document.getElementById("atalho-principal").innerHTML = "Pressione <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>B</kbd>";
+    document.getElementById("atalho-outro").innerHTML = "No Mac: <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>B</kbd>";
+  }
+
+  function semLicenca(txt) {
+    var el = document.getElementById("semlic");
+    if (txt) el.textContent = txt;
+    el.style.display = "block";
+    document.getElementById("tudo").style.display = "none";
+  }
+
+  var gasOk = gas && gas.indexOf("https://script.google.com/") === 0;
+  if (!gasOk || (!lic && !tkt)) {
+    semLicenca();
+  } else if (lic) {
+    montar(lic);
+  } else {
+    // 🎫 veio da Minha Conta com um ticket: o token não trafega pela página de conta.
+    // Trocamos aqui — o ticket vale 10 minutos e só isto o converte no acesso real.
+    document.getElementById("tudo").style.display = "none";
+    var espera = document.createElement("div");
+    espera.className = "priv";
+    espera.textContent = "⏳ Preparando o seu acesso…";
+    document.querySelector(".wrap").insertBefore(espera, document.getElementById("tudo"));
+    fetch(gas + "?acao=ticket&t=" + encodeURIComponent(tkt))
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        espera.remove();
+        if (j && j.ok && j.lic) {
+          document.getElementById("tudo").style.display = "";
+          montar(String(j.lic).replace(/[^a-zA-Z0-9]/g, ""));
+        } else {
+          semLicenca((j && j.motivo) || "Este link de instalação expirou. Abra a página Minha Conta e peça de novo.");
+        }
+      })
+      .catch(function () {
+        espera.remove();
+        semLicenca("Não consegui falar com o servidor. Tente de novo, ou use o link do e-mail de acesso.");
+      });
+  }
+
+  function montar(lic) {
+    var url = gas + "?js=1&lic=" + lic;
+    // FAVORITO v2 (cache-first): roda a última cópia boa na hora; busca/revalida por trás.
+    // Sem cache ainda → mostra "⏳ carregando…" e baixa; eval bloqueado → cai no <script> (v1).
+    var js = "javascript:(function(){" +
+      "var D=document,W=window,T;try{T=W.top||W}catch(e0){T=W}" +
+      "W.JJRIO_LIC='" + lic + "';W.JJRIO_LIC_URL='" + gas + "';" +
+      "try{T.JJRIO_LIC=W.JJRIO_LIC;T.JJRIO_LIC_URL=W.JJRIO_LIC_URL}catch(e1){}" +
+      "var U='" + url + "';" +
+      "var ls=null;try{ls=T.localStorage}catch(e2){}" +
+      "if(!ls)try{ls=W.localStorage}catch(e3){}" +
+      "var ran=0,c=null;" +
+      "try{c=ls?JSON.parse(ls.getItem('jjrio_lic_code')||'null'):null}catch(e4){}" +
+      "if(c&&c.js&&c.js.length>50000&&(new Date().getTime()-(c.t||0))<2592000000){try{W.eval(c.js);ran=1}catch(e5){ran=0}}" +
+      "function fim(){try{var g=D.getElementById('jjrio-lic-load');if(g)g.parentNode.removeChild(g)}catch(e6){}}" +
+      "if(!ran){try{if(!D.getElementById('jjrio-lic-load')){var g=D.createElement('div');g.id='jjrio-lic-load';" +
+      "g.setAttribute('style','position:fixed;top:14px;right:14px;z-index:2147483647;background:#0f766e;color:#fff;" +
+      "font:600 13px -apple-system,Arial,sans-serif;padding:10px 16px;border-radius:10px;box-shadow:0 10px 26px rgba(0,0,0,.3)');" +
+      "g.textContent='\\u23F3 Auto-Ficha PRO carregando\\u2026';(D.body||D.documentElement).appendChild(g)}}catch(e7){}}" +
+      "function inj(){var s=D.createElement('script');s.src=U+'&t='+new Date().getTime();s.onload=fim;s.onerror=fim;" +
+      "(D.head||D.documentElement).appendChild(s)}" +
+      "var x=null;try{x=new XMLHttpRequest()}catch(e8){}" +
+      "if(!x){if(!ran)inj();return}" +
+      "try{x.open('GET',U+'&t='+new Date().getTime(),true);x.timeout=45000;" +
+      "x.onreadystatechange=function(){if(x.readyState!==4)return;fim();var t=x.responseText||'';" +
+      "if(x.status===200&&t.length>50000){" +
+      "try{if(ls)ls.setItem('jjrio_lic_code',JSON.stringify({js:t,t:new Date().getTime()}))}catch(e9){}" +
+      "if(!ran){try{W.eval(t);ran=1}catch(eA){inj()}}" +
+      "}else if(x.status===200&&t){" +
+      "try{if(ls)ls.removeItem('jjrio_lic_code')}catch(eB){}" +
+      "try{W.eval(t)}catch(eC){if(!ran)inj()}" +
+      "}else{if(!ran)inj()}};" +
+      "x.ontimeout=x.onerror=function(){fim();if(!ran)inj()};" +
+      "x.send()}catch(eD){fim();if(!ran)inj()}" +
+      "})();";
+    var botao = document.getElementById("botao");
+    botao.setAttribute("href", js);
+    document.getElementById("codigo").textContent = js;
+    // clicar no botão AQUI rodaria o produto nesta página — bloqueia e ensina o gesto
+    botao.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      document.getElementById("naoclique").style.display = "block";
+    });
+    document.getElementById("vercodigo").addEventListener("click", function (ev) {
+      ev.preventDefault();
+      document.getElementById("codigo").style.display = "inline-block";
+    });
+    document.getElementById("copiar").addEventListener("click", function () {
+      var b = document.getElementById("copiar");
+      function feito() { b.classList.add("ok"); b.textContent = "✅ Copiado! Agora o passo 2"; }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(js).then(feito, function () { copiaVelha(); });
+      } else { copiaVelha(); }
+      function copiaVelha() {
+        var ta = document.createElement("textarea");
+        ta.value = js; document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); feito(); } catch (e) {
+          document.getElementById("codigo").style.display = "inline-block";
+          b.textContent = "Copie manualmente o código abaixo";
+        }
+        ta.remove();
+      }
+    });
+  }
+</script>
+</div>
+</body>
+</html>

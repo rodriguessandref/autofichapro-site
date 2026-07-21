@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Auto-Ficha PRO — Menos digitação, mais tempo clínico</title>
+<meta name="description" content="O turno inteiro de ASOs em 5 cliques por atendimento no SOC: ficha clínica completa com blindagem, resultado, ASO e assinatura digital. Feito por médico do trabalho. R$ 59,90/mês.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬩</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Instrument+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#060e13; --bg2:#0a1720; --card:#0e1e28; --card2:#12242f;
+    --line:rgba(45,212,191,.14); --line2:rgba(148,163,184,.12);
+    --teal:#14b8a6; --teal2:#2dd4bf; --teal-deep:#0f766e;
+    --ink:#e7f0ee; --mut:#8fa8a3; --mut2:#64807b;
+    --gold:#fbbf24;
+    --disp:"Fraunces",serif; --body:"Instrument Sans",-apple-system,sans-serif; --mono:"Spline Sans Mono",monospace;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; overflow-x:clip; }
+  body { background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6;
+    -webkit-font-smoothing:antialiased; overflow-x:clip; }
+  ::selection { background:rgba(45,212,191,.3); }
+
+  /* ---------- atmosfera ---------- */
+  .glow { position:fixed; border-radius:50%; filter:blur(110px); pointer-events:none; z-index:0; }
+  .glow.a { width:640px; height:640px; background:rgba(20,184,166,.13); top:-220px; right:-160px; }
+  .glow.b { width:520px; height:520px; background:rgba(15,118,110,.12); top:48%; left:-240px; }
+  .glow.c { width:600px; height:600px; background:rgba(20,184,166,.09); bottom:-260px; right:-140px; }
+  body::before { content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
+    background-image:linear-gradient(rgba(45,212,191,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(45,212,191,.04) 1px,transparent 1px);
+    background-size:56px 56px;
+    -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 30%,transparent 75%);
+            mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 30%,transparent 75%); }
+  .wrap { position:relative; z-index:1; max-width:1120px; margin:0 auto; padding:0 26px; }
+
+  /* ---------- topbar ---------- */
+  .top { position:sticky; top:0; z-index:50; backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    background:rgba(6,14,19,.72); border-bottom:1px solid var(--line2); }
+  .top .wrap { display:flex; align-items:center; gap:26px; height:64px; }
+  .logo { font-family:var(--disp); font-weight:700; font-size:19px; color:var(--ink); text-decoration:none; letter-spacing:.2px; }
+  .logo .dot { display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--teal2); margin-right:9px;
+    box-shadow:0 0 12px var(--teal2); animation:pulse 2.4s infinite; }
+  .logo b { color:var(--teal2); }
+  nav { display:flex; gap:20px; margin-left:auto; align-items:center; }
+  nav a { color:var(--mut); text-decoration:none; font-size:14.5px; font-weight:500; transition:color .2s; }
+  nav a:hover { color:var(--teal2); }
+  .bt { display:inline-block; text-decoration:none; text-align:center; font-weight:700; border-radius:12px; cursor:pointer;
+    transition:transform .18s, box-shadow .18s, background .18s; }
+  .bt-s { background:linear-gradient(135deg,var(--teal),var(--teal-deep)); color:#03110e; font-size:14px; padding:10px 20px;
+    box-shadow:0 0 0 1px rgba(45,212,191,.35), 0 8px 24px -8px rgba(20,184,166,.5); }
+  .bt-s:hover { transform:translateY(-1px); box-shadow:0 0 0 1px rgba(45,212,191,.5), 0 12px 30px -8px rgba(20,184,166,.65); }
+  @media (max-width:800px){ nav a:not(.bt-s){ display:none; } }
+
+  /* ---------- hero ---------- */
+  .hero { padding:84px 0 40px; display:grid; grid-template-columns:1.05fr .95fr; gap:48px; align-items:center; }
+  @media (max-width:900px){ .hero { grid-template-columns:1fr; padding-top:56px; } }
+  .eyebrow { font-family:var(--mono); font-size:12.5px; font-weight:600; letter-spacing:.16em; color:var(--teal2);
+    text-transform:uppercase; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+  .eyebrow::before { content:""; width:26px; height:1px; background:var(--gold); }
+  h1 { font-family:var(--disp); font-weight:600; font-size:clamp(38px,5.4vw,60px); line-height:1.06; letter-spacing:-.01em; }
+  h1 em, h2 em, h3 em { font-family:var(--disp); font-style:italic; color:var(--gold); font-weight:600; }
+  .cadeia { margin-top:18px; font-family:var(--mono); font-size:13px; color:var(--mut); display:flex; flex-wrap:wrap; gap:4px 8px; align-items:center; }
+  .cadeia b { color:var(--teal2); font-weight:600; }
+  .cadeia .seta { color:var(--gold); }
+  .sub { color:var(--mut); font-size:18.5px; margin:18px 0 30px; max-width:34em; }
+  .sub b { color:var(--ink); font-weight:600; }
+  .ctas { display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
+  .bt-g { background:linear-gradient(135deg,var(--teal2),var(--teal-deep)); color:#03110e; font-size:16.5px; padding:17px 32px;
+    box-shadow:0 0 0 1px rgba(45,212,191,.4), 0 18px 44px -12px rgba(20,184,166,.55); }
+  .bt-g:hover { transform:translateY(-2px); box-shadow:0 0 0 1px rgba(45,212,191,.6), 0 24px 54px -12px rgba(20,184,166,.7); }
+  .bt-o { color:var(--ink); font-size:15px; padding:16px 26px; border:1px solid var(--line); background:rgba(45,212,191,.04); }
+  .bt-o:hover { border-color:rgba(45,212,191,.4); background:rgba(45,212,191,.09); }
+  .prova { margin-top:26px; font-size:13.5px; color:var(--mut2); display:flex; align-items:center; gap:9px; }
+  .prova .ok { color:var(--teal2); }
+
+  /* ---------- mockup do painel (hero) ---------- */
+  .mockwrap { position:relative; animation:flutua 7s ease-in-out infinite; }
+  @keyframes flutua { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+  .painel { background:#fff; color:#0f172a; border-radius:18px; width:344px; margin:0 auto;
+    box-shadow:0 0 0 1px rgba(45,212,191,.25), 0 40px 90px -20px rgba(0,0,0,.75), 0 0 80px -20px rgba(20,184,166,.35);
+    font-size:12px; overflow:hidden; }
+  .p-cab { display:flex; align-items:center; gap:9px; padding:13px 15px; border-bottom:1px solid #e2e8f0; }
+  .p-dot { width:9px; height:9px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981; animation:pulse 2s infinite; }
+  .p-tit b { font-size:13.5px; } .p-tit small { display:block; color:#64748b; font-size:9.5px; font-family:var(--mono); }
+  .p-timer { margin-left:auto; font-family:var(--mono); font-size:10.5px; color:#0f766e; font-weight:600;
+    background:#f0fdfa; border:1px solid #99f6e4; padding:3px 8px; border-radius:7px; }
+  .p-abas { display:flex; border-bottom:1px solid #e2e8f0; }
+  .p-aba { flex:1; text-align:center; padding:8px; font-weight:600; font-size:11px; color:#64748b; }
+  .p-aba.on { color:#0f766e; box-shadow:inset 0 -2px 0 #0f766e; }
+  .p-corpo { padding:14px 15px 16px; }
+  .p-eyebrow { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:#94a3b8; font-weight:700; margin-bottom:8px; }
+  .p-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:12px; }
+  .p-step { border:1px solid #e2e8f0; border-radius:9px; padding:8px 4px; text-align:center; }
+  .p-step .n { display:block; font-family:var(--mono); font-weight:600; font-size:13px; color:#0f766e; }
+  .p-step .l { font-size:8.5px; color:#64748b; }
+  .p-step.done { background:#f0fdfa; border-color:#5eead4; }
+  .p-step.done .n::after { content:" ✓"; color:#059669; }
+  .p-cpf { border:1px solid #e2e8f0; background:#f8fafc; border-radius:8px; padding:8px 10px; font-family:var(--mono);
+    font-size:10.5px; color:#334155; display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .p-cpf .lock { color:#0f766e; }
+  .p-mini { font-size:10.3px; color:#475569; border:1px dashed #cbd5e1; border-radius:8px; padding:7px 9px; margin-bottom:12px; }
+  .p-mini b { color:#0f766e; }
+  .p-toast { background:linear-gradient(135deg,#0f766e,#0c544d); color:#fff; border-radius:10px; padding:10px 12px;
+    font-weight:600; font-size:11.5px; display:flex; gap:8px; align-items:center;
+    animation:aparece .8s ease 1.6s both; }
+  @keyframes aparece { from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)} }
+  .selo { position:absolute; top:-16px; right:-10px; background:var(--gold); color:#221a03; font-weight:700; font-size:11px;
+    padding:7px 13px; border-radius:999px; transform:rotate(4deg); box-shadow:0 10px 24px -8px rgba(251,191,36,.55);
+    font-family:var(--mono); letter-spacing:.03em; }
+  @media (max-width:900px){ .mockwrap{ margin-top:8px; } }
+
+  /* ---------- números ---------- */
+  .nums { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line2);
+    border:1px solid var(--line2); border-radius:16px; overflow:hidden; margin:52px 0 0; }
+  @media (max-width:760px){ .nums{ grid-template-columns:repeat(2,1fr); } }
+  .num { background:var(--bg2); padding:24px 18px; text-align:center; }
+  .num .v { font-family:var(--disp); font-size:30px; font-weight:600; color:var(--teal2); }
+  .num .v small { font-size:15px; }
+  .num .k { font-size:12.5px; color:var(--mut2); margin-top:4px; }
+
+  /* ---------- seções ---------- */
+  section { padding:92px 0 8px; }
+  .s-eyebrow { font-family:var(--mono); font-size:12px; font-weight:600; letter-spacing:.16em; color:var(--teal2);
+    text-transform:uppercase; margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+  .s-eyebrow::before { content:""; width:26px; height:1px; background:var(--gold); }
+  h2 { font-family:var(--disp); font-weight:600; font-size:clamp(28px,3.6vw,42px); line-height:1.12; letter-spacing:-.01em; max-width:22em; }
+  .s-sub { color:var(--mut); margin-top:14px; max-width:44em; }
+  .s-sub b { color:var(--ink); }
+
+  /* ---------- desejos (por quê) ---------- */
+  .desejos { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:44px; }
+  @media (max-width:900px){ .desejos{ grid-template-columns:1fr; } }
+  .dcard { background:linear-gradient(180deg,var(--card),var(--bg2)); border:1px solid var(--line2); border-radius:20px;
+    padding:30px 26px; position:relative; overflow:hidden; transition:transform .25s, border-color .25s; }
+  .dcard:hover { transform:translateY(-4px); border-color:rgba(45,212,191,.35); }
+  .dcard .big { position:absolute; right:-6px; top:-18px; font-size:110px; opacity:.07; }
+  .dcard h3 { font-family:var(--disp); font-size:22px; font-weight:600; margin:10px 0 12px; line-height:1.2; }
+  .dcard p { font-size:14.5px; color:var(--mut); }
+  .dcard p b { color:var(--ink); }
+  .dcard .ic { width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+    font-size:22px; background:rgba(45,212,191,.1); border:1px solid rgba(45,212,191,.22); }
+  .dquote { margin-top:16px; border-left:2px solid var(--gold); padding:4px 0 4px 14px; font-family:var(--disp);
+    font-style:italic; font-size:14.5px; color:var(--ink); line-height:1.5; }
+
+  /* dor vs alívio */
+  .versus { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:40px; }
+  @media (max-width:760px){ .versus{ grid-template-columns:1fr; } }
+  .v-col { border-radius:18px; padding:28px; border:1px solid var(--line2); background:var(--bg2); }
+  .v-col.dor { border-color:rgba(248,113,113,.18); }
+  .v-col.alivio { border-color:rgba(45,212,191,.3); background:linear-gradient(180deg,rgba(20,184,166,.08),rgba(20,184,166,.02)); }
+  .v-col h3 { font-family:var(--disp); font-size:20px; font-weight:600; margin-bottom:16px; }
+  .v-col.dor h3 { color:#fca5a5; } .v-col.alivio h3 { color:var(--teal2); }
+  .v-col li { list-style:none; padding:7px 0 7px 28px; position:relative; color:var(--mut); font-size:15px; }
+  .v-col.dor li::before { content:"✕"; position:absolute; left:2px; color:#f87171; font-size:12px; top:10px; }
+  .v-col.alivio li::before { content:"✓"; position:absolute; left:2px; color:var(--teal2); font-weight:700; top:8px; }
+  .v-col.alivio li b { color:var(--ink); }
+
+  /* ---------- POR DENTRO (widgets interativos) ---------- */
+  .indice { position:sticky; top:64px; z-index:40; margin-top:36px; padding:12px 0; background:rgba(6,14,19,.85);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); display:flex; gap:8px; flex-wrap:wrap; }
+  .indice a { font-family:var(--mono); font-size:11.5px; color:var(--mut); text-decoration:none; border:1px solid var(--line2);
+    border-radius:999px; padding:6px 13px; transition:all .2s; white-space:nowrap; }
+  .indice a:hover { color:var(--teal2); border-color:rgba(45,212,191,.45); }
+  .widget { margin-top:64px; scroll-margin-top:130px; }
+  .w-num { font-family:var(--mono); font-size:12px; color:var(--gold); letter-spacing:.18em; margin-bottom:8px; }
+  .widget h3 { font-family:var(--disp); font-weight:600; font-size:clamp(22px,2.8vw,30px); line-height:1.15; max-width:24em; }
+  .widget .w-sub { color:var(--mut); margin:10px 0 0; max-width:46em; font-size:15.5px; }
+  .widget .w-sub b { color:var(--ink); }
+  .lab { display:grid; grid-template-columns:minmax(280px,.9fr) 1.1fr; gap:18px; margin-top:26px; align-items:start; }
+  @media (max-width:860px){ .lab{ grid-template-columns:1fr; } }
+  .controles { background:var(--bg2); border:1px solid var(--line2); border-radius:18px; padding:20px; }
+  .controles .c-tit { font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--mut2); margin-bottom:12px; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-family:inherit; font-size:13px; font-weight:600; color:var(--mut); background:transparent;
+    border:1px solid var(--line2); border-radius:999px; padding:8px 15px; cursor:pointer; transition:all .18s; }
+  .chip:hover { border-color:rgba(45,212,191,.45); color:var(--ink); }
+  .chip.on { background:rgba(45,212,191,.14); border-color:var(--teal2); color:var(--teal2); }
+  .c-linha { margin-top:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; font-size:13.5px; color:var(--mut); }
+  .c-linha input[type=text], .c-linha input[type=number] { background:var(--card); border:1px solid var(--line2); color:var(--ink);
+    border-radius:9px; padding:9px 11px; font-family:inherit; font-size:14px; width:88px; }
+  .c-linha input.larga { width:100%; }
+  .c-nota { margin-top:14px; font-size:12.5px; color:var(--mut2); line-height:1.55; }
+  .c-nota b { color:var(--mut); }
+  .play { display:inline-block; margin-top:4px; font-family:inherit; font-weight:700; font-size:13.5px; color:#03110e;
+    background:linear-gradient(135deg,var(--teal2),var(--teal-deep)); border:none; border-radius:10px; padding:11px 20px; cursor:pointer;
+    box-shadow:0 0 0 1px rgba(45,212,191,.4), 0 10px 26px -10px rgba(20,184,166,.6); transition:transform .15s; }
+  .play:hover { transform:translateY(-1px); }
+
+  /* a "ficha" branca dos widgets */
+  .fmini { background:#fff; color:#0f172a; border-radius:16px; padding:16px 18px; font-family:Verdana,Arial,sans-serif;
+    font-size:11px; line-height:1.55; box-shadow:0 0 0 1px rgba(45,212,191,.25), 0 30px 70px -22px rgba(0,0,0,.7); }
+  .fmini .f-lab { font-size:9.5px; font-weight:bold; color:#1a2b4a; font-family:var(--body); letter-spacing:.04em;
+    text-transform:uppercase; margin:10px 0 5px; display:flex; gap:8px; align-items:center; }
+  .fmini .f-lab:first-child { margin-top:0; }
+  .fmini .f-lab .tagz { font-size:8.5px; background:#f0fdfa; color:#0f766e; border:1px solid #99f6e4; padding:1px 7px;
+    border-radius:999px; letter-spacing:0; text-transform:none; font-weight:600; }
+  .fcampo { background:#fbfdff; border:1px solid #c9d4e0; border-radius:4px; padding:8px 10px; white-space:pre-wrap; }
+  .fcampo:empty::before { content:"—"; color:#aab4c2; }
+  .refere-hd { font-weight:bold; color:#0b3a86; margin-bottom:2px; }
+  .rl { padding:2px 4px; border-radius:3px; }
+  .rl.add { animation:rlin .8s ease; }
+  @keyframes rlin { 0%{ opacity:0; transform:translateY(-5px); background:#ccf3e8; } 60%{ background:#ccf3e8; } 100%{ opacity:1; transform:none; background:transparent; } }
+  .nexo { margin:7px 0; padding:5px 8px; background:#f0fdf7; border-left:3px solid #0f766e; border-radius:0 3px 3px 0; }
+  .ng { position:relative; padding:1px 4px; color:#333; max-height:36px; overflow:hidden; opacity:1;
+    transition:max-height .35s ease .75s, opacity .35s ease .75s, padding .35s ease .75s, color .3s ease; }
+  .ng::after { content:""; position:absolute; left:4px; top:55%; height:2px; width:0; background:#d33; transition:width .5s ease; }
+  .ng.cut { color:#c33; max-height:0; opacity:0; padding-top:0; padding-bottom:0; }
+  .ng.cut::after { width:96%; }
+  .pills { display:flex; flex-wrap:wrap; gap:6px; }
+  .pill { font-family:var(--body); font-size:10.5px; font-weight:600; border:1px solid #c9d4e0; color:#5a6a80;
+    border-radius:999px; padding:4px 10px; background:#fbfdff; transition:all .25s; }
+  .pill.on { background:#0f766e; border-color:#0f766e; color:#fff; }
+  .pill.on.dz::after { content:" · deduzido"; font-weight:400; opacity:.8; }
+  .pill.epi { background:#f0fdfa; border-color:#99f6e4; color:#0f766e; animation:rlin .6s ease; }
+  .badge-tipo { display:inline-block; font-family:var(--body); font-size:11px; font-weight:700; border-radius:8px; padding:5px 11px; margin-bottom:8px; }
+  .badge-tipo.risco { background:#fff7ed; color:#9a3412; border:1px solid #fdba74; }
+  .badge-tipo.admin { background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+  .badge-tipo.default { background:#f8fafc; color:#475569; border:1px solid #cbd5e1; }
+  .formula { font-family:var(--mono); font-size:15px; color:#0f766e; background:#f0fdfa; border:1px dashed #5eead4;
+    border-radius:8px; padding:10px 14px; margin-bottom:8px; }
+  .obs30 { display:flex; align-items:center; gap:10px; }
+  .obs30 .fcampo { flex:1; }
+  .obs30 .cnt { font-family:var(--mono); font-size:10px; color:#64748b; white-space:nowrap; }
+
+  /* 4 botões — timeline */
+  .btl { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:26px; }
+  @media (max-width:860px){ .btl{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px){ .btl{ grid-template-columns:1fr; } }
+  .bcard { background:var(--bg2); border:1px solid var(--line2); border-radius:16px; padding:20px 18px; position:relative; transition:all .3s; }
+  .bcard .bn { font-family:var(--mono); font-weight:700; font-size:15px; color:var(--teal2); border:1px solid rgba(45,212,191,.35);
+    border-radius:9px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; margin-bottom:12px;
+    background:rgba(45,212,191,.07); }
+  .bcard h4 { font-size:15.5px; font-weight:700; margin-bottom:6px; }
+  .bcard p { font-size:12.8px; color:var(--mut); }
+  .bcard p b { color:var(--ink); }
+  .bcard.ligado { border-color:var(--teal2); background:linear-gradient(180deg,rgba(20,184,166,.12),rgba(20,184,166,.03));
+    transform:translateY(-3px); }
+  .bcard.ligado .bn { background:var(--teal2); color:#03110e; }
+  .bcard.humano { border-color:rgba(251,191,36,.4); }
+  .bcard.humano .bn { color:var(--gold); border-color:rgba(251,191,36,.5); background:rgba(251,191,36,.08); }
+  .bcard.humano.ligado { border-color:var(--gold); background:linear-gradient(180deg,rgba(251,191,36,.12),rgba(251,191,36,.02)); }
+  .bcard.humano.ligado .bn { background:var(--gold); color:#221a03; }
+  .bstatus { margin-top:14px; font-family:var(--mono); font-size:12px; color:var(--mut2); min-height:20px; }
+  .bstatus b { color:var(--teal2); }
+
+  /* guia soc — passos */
+  .gpassos { list-style:none; margin-top:12px; }
+  .gpassos li { padding:7px 0 7px 30px; position:relative; color:var(--mut); font-size:13.5px; border-bottom:1px dashed var(--line2); }
+  .gpassos li::before { content:"○"; position:absolute; left:4px; color:var(--mut2); }
+  .gpassos li.ok { color:var(--ink); }
+  .gpassos li.ok::before { content:"✓"; color:var(--teal2); font-weight:700; }
+  .gvs { font-family:var(--mono); font-size:12px; color:var(--gold); margin-top:12px; }
+
+  /* assinatura mini-wizard */
+  .assmini { background:#f7f8fa; color:#333; border:1px solid #9aa5b5; border-radius:10px; padding:14px;
+    font-family:Verdana,Arial,sans-serif; font-size:10px; max-width:340px; }
+  .assmini h6 { font-size:10.5px; margin-bottom:10px; color:#1a2b4a; }
+  .passo-a { display:flex; align-items:center; gap:8px; padding:6px 8px; margin-bottom:5px; background:#fff;
+    border:1px solid #d8dde5; border-radius:3px; color:#5a6a80; }
+  .passo-a .pnum { width:16px; height:16px; border-radius:50%; background:#dfe3ea; color:#5a6a80; display:flex;
+    align-items:center; justify-content:center; font-size:9px; font-weight:bold; flex:none; }
+  .passo-a.rodando { border-color:#f4b400; }
+  .passo-a.feito { border-color:#0a7a3d; color:#0a7a3d; }
+  .passo-a.feito .pnum { background:#0a7a3d; color:#fff; }
+  .spin { display:none; width:12px; height:12px; border:2px solid #f4b400; border-top-color:transparent; border-radius:50%;
+    animation:ro 1s linear infinite; margin-left:auto; }
+  @keyframes ro { to{ transform:rotate(360deg);} }
+  .passo-a.rodando .spin { display:block; }
+  .bt-iniciar { width:100%; margin-top:8px; background:linear-gradient(180deg,#2f6fce,#245ba9); color:#fff; border:1px solid #1c4c8f;
+    border-radius:3px; padding:8px; font-size:11px; font-weight:bold; font-family:Verdana; cursor:pointer; }
+  .bt-iniciar:disabled { opacity:.55; cursor:default; }
+  .halo { animation:halo 1s infinite; border-radius:4px; }
+  @keyframes halo { 0%,100%{ box-shadow:0 0 0 2px rgba(255,153,51,.9), 0 0 14px rgba(255,153,51,.7);} 50%{ box-shadow:0 0 0 4px rgba(255,153,51,.4), 0 0 20px rgba(255,153,51,.4);} }
+  .carimbo { display:none; color:#0a7a3d; border:2px solid #0a7a3d; border-radius:6px; padding:6px 10px;
+    font-size:9.5px; font-weight:bold; transform:rotate(-3deg); margin:10px auto 0; width:fit-content; background:#fff; }
+
+  /* modelos */
+  .modelos { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:26px; }
+  @media (max-width:760px){ .modelos{ grid-template-columns:1fr; } }
+  .mcard { background:var(--bg2); border:1px solid var(--line2); border-radius:18px; padding:24px; }
+  .mcard h4 { font-family:var(--disp); font-size:19px; font-weight:600; margin-bottom:4px; }
+  .mcard .mtag { font-family:var(--mono); font-size:10.5px; color:var(--teal2); }
+  .mcard ul { margin-top:12px; }
+  .mcard li { list-style:none; padding:5px 0 5px 24px; position:relative; color:var(--mut); font-size:13.5px; }
+  .mcard li::before { content:"›"; position:absolute; left:6px; color:var(--teal2); font-weight:700; }
+  .mcard details { margin-top:10px; border:1px solid var(--line2); border-radius:10px; }
+  .mcard summary { cursor:pointer; padding:9px 13px; font-size:12.5px; color:var(--teal2); list-style:none; }
+  .mcard summary::-webkit-details-marker { display:none; }
+  .mcard .mobs { padding:0 13px 12px; font-size:11.5px; color:var(--mut); line-height:1.6; }
+  .mcard .mobs b { color:var(--ink); }
+
+  .verdemo { display:inline-block; margin-top:18px; font-size:13.5px; font-weight:600; color:var(--teal2); text-decoration:none; }
+  .verdemo:hover { text-decoration:underline; }
+
+  /* ---------- ética ---------- */
+  .par { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:44px; }
+  @media (max-width:760px){ .par{ grid-template-columns:1fr; } }
+  .pcard2 { border-radius:18px; padding:28px; border:1px solid var(--line2); background:var(--bg2); }
+  .pcard2.alt { background:linear-gradient(180deg,rgba(15,118,110,.25),rgba(15,118,110,.08)); border-color:rgba(45,212,191,.4); position:relative; overflow:hidden; }
+  .pcard2.alt::after { content:"⚖"; position:absolute; right:-14px; bottom:-40px; font-size:170px; opacity:.07; }
+  .pcard2 h3 { font-family:var(--disp); font-size:20px; font-weight:600; margin-bottom:16px; }
+  .pcard2.alt h3 { color:var(--teal2); }
+  .pcard2 li { list-style:none; padding:7px 0 7px 28px; position:relative; color:var(--mut); font-size:15px; }
+  .pcard2 li b { color:var(--ink); }
+  .pcard2 li::before { content:"✓"; position:absolute; left:2px; color:var(--teal2); font-weight:700; top:8px; }
+  .pcard2.alt li::before { content:"✕"; color:var(--gold); }
+  .citacao { margin:52px auto 0; max-width:800px; text-align:center; }
+  .citacao p { font-family:var(--disp); font-style:italic; font-weight:400; font-size:clamp(21px,3vw,29px); line-height:1.45; }
+  .citacao p b { color:var(--teal2); font-style:normal; }
+  .citacao .divisor { width:60px; height:2px; background:var(--gold); margin:22px auto 0; }
+  .mantras { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:26px; }
+  .mantra { font-family:var(--mono); font-size:12px; color:var(--mut); border:1px solid var(--line2); border-radius:999px; padding:8px 16px; }
+  .mantra b { color:var(--teal2); font-weight:600; }
+
+  /* como funciona */
+  .passos { counter-reset:p; margin-top:44px; display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  @media (max-width:900px){ .passos{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .passos{ grid-template-columns:1fr; } }
+  .passo { counter-increment:p; background:var(--bg2); border:1px solid var(--line2); border-radius:18px; padding:26px 22px; position:relative; }
+  .passo::before { content:"0" counter(p); font-family:var(--mono); font-size:13px; font-weight:600; color:var(--teal2);
+    display:inline-block; border:1px solid rgba(45,212,191,.35); border-radius:8px; padding:4px 9px; margin-bottom:16px;
+    background:rgba(45,212,191,.07); }
+  .passo h3 { font-size:16px; font-weight:700; margin-bottom:8px; }
+  .passo p { font-size:13.5px; color:var(--mut); }
+  .passo p b { color:var(--ink); }
+  .just { margin-top:56px; border-left:3px solid var(--teal2); background:linear-gradient(90deg,rgba(20,184,166,.09),transparent 70%);
+    border-radius:0 18px 18px 0; padding:30px 34px; }
+  .just p { font-family:var(--disp); font-style:italic; font-weight:400; font-size:clamp(18px,2.4vw,23px); line-height:1.5; color:var(--ink); max-width:34em; }
+  .just p b { color:var(--teal2); font-style:normal; }
+  .just .quem { margin-top:16px; font-family:var(--body); font-style:normal; font-size:13.5px; color:var(--mut2); }
+  .just .quem b { color:var(--mut); }
+
+  /* pricing */
+  .preco-grid { display:grid; grid-template-columns:1fr 420px; gap:40px; align-items:center; margin-top:46px; }
+  @media (max-width:900px){ .preco-grid{ grid-template-columns:1fr; } }
+  .inclui li { list-style:none; padding:10px 0 10px 34px; position:relative; color:var(--mut); font-size:15.5px; border-bottom:1px dashed var(--line2); }
+  .inclui li::before { content:"✓"; position:absolute; left:0; top:9px; width:22px; height:22px; border-radius:7px; font-size:12px;
+    display:flex; align-items:center; justify-content:center; color:#03110e; background:var(--teal2); font-weight:800; }
+  .inclui li b { color:var(--ink); }
+  .pcard { position:relative; background:linear-gradient(180deg,#10222c,#0b1922); border:1px solid rgba(45,212,191,.4);
+    border-radius:24px; padding:38px 34px 30px; text-align:center;
+    box-shadow:0 0 70px -18px rgba(20,184,166,.35), 0 30px 70px -30px rgba(0,0,0,.8); }
+  .pcard .tag { position:absolute; top:-14px; left:50%; transform:translateX(-50%); background:var(--gold); color:#221a03;
+    font-weight:700; font-size:12px; padding:6px 16px; border-radius:999px; font-family:var(--mono); letter-spacing:.04em; white-space:nowrap; }
+  .pcard .plano { font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--mut); margin-bottom:14px; }
+  .pcard .valor { font-family:var(--disp); font-weight:600; font-size:64px; color:var(--ink); line-height:1; }
+  .pcard .valor small { font-size:22px; color:var(--mut); font-family:var(--body); font-weight:500; }
+  .pcard .cents { font-size:30px; }
+  .pcard .por { color:var(--mut2); font-size:13.5px; margin:8px 0 24px; }
+  .pcard .bt-g { display:block; width:100%; }
+  .pcard .mini { margin-top:16px; font-size:12.5px; color:var(--mut2); line-height:1.8; }
+  .pcard .mini b { color:var(--mut); }
+  .pcard .ja { display:block; margin-top:16px; color:var(--teal2); font-weight:600; font-size:14px; text-decoration:none; }
+  .pcard .ja:hover { text-decoration:underline; }
+
+  /* FAQ */
+  .faq { max-width:760px; margin-top:40px; }
+  details.fq { border:1px solid var(--line2); border-radius:14px; margin-bottom:12px; background:var(--bg2); overflow:hidden; }
+  details.fq[open] { border-color:rgba(45,212,191,.32); }
+  details.fq summary { cursor:pointer; padding:19px 22px; font-weight:600; font-size:15.5px; list-style:none; display:flex; justify-content:space-between; gap:14px; }
+  details.fq summary::-webkit-details-marker { display:none; }
+  details.fq summary::after { content:"+"; color:var(--teal2); font-size:20px; font-weight:400; transition:transform .25s; }
+  details.fq[open] summary::after { transform:rotate(45deg); }
+  details.fq .a { padding:0 22px 20px; color:var(--mut); font-size:14.5px; }
+  details.fq .a b { color:var(--ink); }
+
+  /* CTA final + footer */
+  .final { text-align:center; padding:100px 0 90px; }
+  .final h2 { margin:0 auto 14px; }
+  .final .s-sub { margin:0 auto 34px; }
+  footer { border-top:1px solid var(--line2); padding:34px 0 46px; color:var(--mut2); font-size:13px; }
+  footer .wrap { display:flex; flex-wrap:wrap; gap:10px 28px; align-items:center; }
+  footer b { color:var(--mut); }
+  footer .lg { font-family:var(--disp); color:var(--ink); font-size:15px; margin-right:auto; }
+
+  /* reveal on scroll */
+  .rv { opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease; }
+  .rv.on { opacity:1; transform:none; }
+  .d1{transition-delay:.08s} .d2{transition-delay:.16s} .d3{transition-delay:.24s} .d4{transition-delay:.32s}
+  @media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} .rv{opacity:1;transform:none} }
+</style>
+</head>
+<body>
+
+<div class="glow a"></div><div class="glow b"></div><div class="glow c"></div>
+
+<div class="top">
+  <div class="wrap">
+    <a class="logo" href="#"><span class="dot"></span>Auto-Ficha <b>PRO</b></a>
+    <nav>
+      <a href="#porque">Por quê</a>
+      <a href="#dentro">Por dentro</a>
+      <a href="demo.html">🩺 Demo ao vivo</a>
+      <a href="#preco">Assinatura</a>
+      <a href="#faq">FAQ</a>
+      <a href="minha-conta.html">Minha conta</a>
+      <a class="bt bt-s" href="#preco">Assinar agora</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div>
+      <div class="eyebrow rv">Para médicos do trabalho que vivem no SOC</div>
+      <h1 class="rv d1">Menos digitação,<br>mais <em>tempo clínico</em>.</h1>
+      <div class="cadeia rv d2">Menos digitação <span class="seta">→</span> atendimento mais ágil
+        <span class="seta">→</span> menos fila <span class="seta">→</span> <b>empresas satisfeitas</b></div>
+      <p class="sub rv d2">O turno inteiro de ASOs em <b>5 cliques por atendimento</b>: ficha clínica extremamente
+      completa, resultado liberado, ASO emitido e <b>assinatura digital concluída</b>. Você confere, você decide,
+      você assina — o Auto-Ficha PRO corta a digitação, não o ato médico.</p>
+      <div class="ctas rv d3">
+        <a class="bt bt-g" href="demo.html">🩺 Sentir a ficha se escrever — demo ao vivo</a>
+        <a class="bt bt-o" href="#preco">Assinar — R$ 59,90/mês</a>
+      </div>
+      <div class="prova rv d4"><span class="ok">●</span> Validado em produção — 7 assinaturas digitais seguidas num único turno real.</div>
+    </div>
+
+    <div class="mockwrap rv d2">
+      <div class="selo">turno de 4h liberado</div>
+      <div class="painel">
+        <div class="p-cab">
+          <span class="p-dot"></span>
+          <span class="p-tit"><b>Auto Ficha</b><small>SEU NOME · MEDICINA DO TRABALHO</small></span>
+          <span class="p-timer">🔓 3h58</span>
+        </div>
+        <div class="p-abas"><span class="p-aba on">Auto Ficha</span><span class="p-aba">Guia SOC</span></div>
+        <div class="p-corpo">
+          <div class="p-eyebrow">Fluxo de liberação</div>
+          <div class="p-steps">
+            <span class="p-step done"><span class="n">1</span><span class="l">Resultado</span></span>
+            <span class="p-step done"><span class="n">2</span><span class="l">Ficha</span></span>
+            <span class="p-step done"><span class="n">3</span><span class="l">ASO</span></span>
+            <span class="p-step done"><span class="n">4</span><span class="l">Assinatura</span></span>
+          </div>
+          <div class="p-cpf"><span>CPF do assinante</span><span>•••.•••.941-20 <span class="lock">🔒</span></span></div>
+          <div class="p-mini">Ficha: <b>SOC padrão</b> · detectada sozinha &nbsp;·&nbsp; Função lida da ficha: <b>Soldador</b> → EPI com CLT art. 158</div>
+          <div class="p-toast">✅ ASO assinado digitalmente — aba fechada sozinha.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ NÚMEROS ============ -->
+  <div class="nums rv">
+    <div class="num"><div class="v">~15 <small>→</small> 5</div><div class="k">cliques por ASO</div></div>
+    <div class="num"><div class="v">≈3<small>mil</small></div><div class="k">caracteres escritos por ficha</div></div>
+    <div class="num"><div class="v">40<small>+</small></div><div class="k">grupos de EPI por função</div></div>
+    <div class="num"><div class="v">4<small>h</small></div><div class="k">de acesso por turno (PIN)</div></div>
+  </div>
+
+  <!-- ============ POR QUÊ (os 3 desejos) ============ -->
+  <section id="porque">
+    <div class="s-eyebrow rv">Por que vale uma mensalidade</div>
+    <h2 class="rv d1">Você não está assinando um robô.<br>Está comprando de volta o <em>seu tempo</em>.</h2>
+    <div class="desejos">
+      <div class="dcard rv d1">
+        <span class="big">⏳</span>
+        <div class="ic">📚</div>
+        <h3>Tempo pra ser médico — e pessoa</h3>
+        <p>A ficha que roubava minutos sai em segundos, <b>pronta pra sua conferência</b>. No fim do turno,
+        os minutos viram horas: pra <b>estudar, ler, se atualizar</b> — ou simplesmente ir embora na hora,
+        com o trabalho impecável.</p>
+        <div class="dquote">"Preencher a ficha não pode roubar o seu tempo clínico."</div>
+      </div>
+      <div class="dcard rv d2">
+        <span class="big">🌊</span>
+        <div class="ic">😮‍💨</div>
+        <h3>Fila que anda, clínica que respira</h3>
+        <p>Sala de espera cheia é estresse pra todo mundo — você, a recepção, o trabalhador, a empresa que mandou.
+        Atendimento mais ágil = <b>menos fila = menos pressão</b> em cima de você. E empresa que não espera
+        <b>volta e indica</b>.</p>
+        <div class="dquote">"Mais tempo. Menos fila. Empresas satisfeitas."</div>
+      </div>
+      <div class="dcard rv d3">
+        <span class="big">🛡️</span>
+        <div class="ic">⭐</div>
+        <h3>Você se destaca — e sai blindado</h3>
+        <p>Exame físico por sistemas, <b>18 negativas</b>, EPI com base legal, não-nexo documentado, atestação — em
+        <b>todo</b> atendimento. É a ficha que impressiona a auditoria, protege a empresa e <b>fala por você
+        numa perícia</b>.</p>
+        <div class="dquote">"Um exame detalhado e verdadeiro é a melhor blindagem; um exame detalhado que não
+        foi feito é o maior risco."</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DOR vs ALÍVIO ============ -->
+  <section id="dor">
+    <div class="s-eyebrow rv">Você conhece esse ritual</div>
+    <h2 class="rv d1">Cada ASO é uma <em>peregrinação</em> de telas.</h2>
+    <div class="versus">
+      <div class="v-col dor rv d1">
+        <h3>Sem o Auto-Ficha</h3>
+        <ul>
+          <li>Preencher a ficha clínica campo por campo, paciente por paciente</li>
+          <li>Achar o lápis certo no Resultado de Exames, marcar Normal, escolher prestador, salvar</li>
+          <li>Abrir o ASO, marcar Apto, validade, emissor…</li>
+          <li>Biometria → Gerar PDF → Assinar → certificado → avisos → Finalizar → Finalizar</li>
+          <li>Digitar seu CPF toda santa vez pra achar o certificado</li>
+          <li>Repetir isso 20, 30, 40 vezes no turno</li>
+        </ul>
+      </div>
+      <div class="v-col alivio rv d2">
+        <h3>Com o Auto-Ficha PRO</h3>
+        <ul>
+          <li><b>Botão ①</b> — resultado liberado (Normal + prestador), de qualquer tela</li>
+          <li><b>Botão ②</b> — ficha aberta e já preenchida, pra você conferir e ajustar</li>
+          <li><b>Botão ③</b> — ASO emitido e a aba de assinatura aberta</li>
+          <li><b>Botão ④ + 1 clique seu</b> no "Iniciar Assinatura" — o robô conclui e fecha tudo</li>
+          <li><b>5 cliques seus no total</b> — o resto (≈3 mil caracteres, PDF, certificado, finalizar) é o robô</li>
+          <li>Você <b>confere e valida</b> — a medicina continua sua</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ POR DENTRO — interativo ============ -->
+  <section id="dentro">
+    <div class="s-eyebrow rv">Por dentro — mexa, é ao vivo</div>
+    <h2 class="rv d1">Muito mais que 4 botões.<br>Conheça cada peça <em>de perto</em>.</h2>
+    <p class="s-sub rv d2">Tudo abaixo é <b>interativo</b> e roda o motor real do produto, com os textos reais —
+    sobre dados 100% fictícios. Clique, digite, brinque.</p>
+
+    <div class="indice rv d2">
+      <a href="#w-intel">01 · Inteligência da ficha</a>
+      <a href="#w-tab">02 · Carga tabágica</a>
+      <a href="#w-epi">03 · EPI + CLT</a>
+      <a href="#w-mulher">04 · Saúde da mulher</a>
+      <a href="#w-botoes">05 · Os 4 botões</a>
+      <a href="#w-guia">06 · Guia SOC</a>
+      <a href="#w-ass">07 · Assinatura digital</a>
+      <a href="#w-modelos">08 · Dois modelos</a>
+    </div>
+
+    <!-- 01 · INTELIGÊNCIA -->
+    <div class="widget" id="w-intel">
+      <div class="w-num">POR DENTRO · 01</div>
+      <h3 class="rv">Marque <em>uma</em> condição. A ficha inteira se reorganiza.</h3>
+      <p class="w-sub rv d1">Cada condição referida dispara <b>três efeitos ao mesmo tempo</b>:
+      <b>escreve</b> o tópico técnico-jurídico no REFERE, <b>remove</b> a linha "Nega…" contraditória
+      (a ficha nunca afirma e nega a mesma coisa) e <b>marca</b> o item no prontuário do SOC.
+      E o que você não marcou, ela <b>deduz</b>: doença que exige remédio → item 12 marcado sozinho.</p>
+      <div class="lab rv d2">
+        <div class="controles">
+          <div class="c-tit">O trabalhador refere… (clique)</div>
+          <div class="chips" id="i-chips"></div>
+          <div class="c-linha" id="i-ansimed-row" style="display:none">
+            <label class="chip" id="i-ansimed-chip" style="font-size:12px">usa medicação</label>
+          </div>
+          <div class="c-nota">Exemplo em exame <b>Periódico (homem)</b> — nele entra também o fecho de
+          <b>não-nexo</b> após a lista (só em Periódico, Demissional e Mudança de Função).</div>
+        </div>
+        <div class="fmini">
+          <div class="f-lab">Texto Livre — Ficha Clínica <span class="tagz">escreve + remove</span></div>
+          <div class="fcampo" style="max-height:300px; overflow:auto">
+            <div class="refere-hd" id="i-hd" style="display:none">*COLABORADOR REFERE:</div>
+            <div id="i-refere"></div>
+            <div class="nexo" id="i-nexo" style="display:none"></div>
+            <div style="height:6px"></div>
+            <div id="i-negas"></div>
+          </div>
+          <div class="f-lab">Prontuário do SOC <span class="tagz">marca sozinho</span></div>
+          <div class="pills" id="i-pills"></div>
+        </div>
+      </div>
+      <a class="verdemo" href="demo.html">🎮 Brincar com a ficha inteira na demo →</a>
+    </div>
+
+    <!-- 02 · TABAGISMO -->
+    <div class="widget" id="w-tab">
+      <div class="w-num">POR DENTRO · 02</div>
+      <h3 class="rv">Você pergunta. Ela <em>calcula</em>.</h3>
+      <p class="w-sub rv d1">Tabagismo sem conta de cabeça: digite cigarros por dia e anos de fumo — a carga
+      tabágica sai calculada em <b>anos-maço</b>, já escrita no padrão pericial, com plural e vírgula no lugar certo.</p>
+      <div class="lab rv d2">
+        <div class="controles">
+          <div class="c-tit">Anamnese do tabagismo</div>
+          <div class="c-linha">fuma <input type="number" id="t-cig" value="20" min="1"> cigarros/dia</div>
+          <div class="c-linha">há <input type="number" id="t-anos" value="30" min="1"> anos</div>
+          <div class="c-nota">Fórmula: <b>(cigarros ÷ 20) × anos</b>. Sem os números, o texto sai com "X" pra
+          você completar — nunca inventa.</div>
+        </div>
+        <div class="fmini">
+          <div class="f-lab">O cálculo <span class="tagz">automático</span></div>
+          <div class="formula" id="t-formula"></div>
+          <div class="f-lab">O que entra no REFERE</div>
+          <div class="fcampo" id="t-texto"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 · EPI -->
+    <div class="widget" id="w-epi">
+      <div class="w-num">POR DENTRO · 03</div>
+      <h3 class="rv">A função vem da ficha. O EPI vem <em>com a lei junto</em>.</h3>
+      <p class="w-sub rv d1">No plantão, o Auto-Ficha <b>lê a função direto da ficha do SOC</b> — você não digita nada.
+      Um motor com <b>40+ grupos de risco</b> reconhece o cargo (e acumula: "pedreiro" soma poeira/sílica + obra),
+      lista os EPIs e escreve a frase com a blindagem completa: <b>CLT art. 158, NR-1.4.2 e NR-6</b> — recusa
+      injustificada é ato faltoso, e a responsabilidade da empresa fica registrada.</p>
+      <div class="lab rv d2">
+        <div class="controles">
+          <div class="c-tit">Simule a função que estaria na ficha</div>
+          <div class="c-linha"><input type="text" class="larga" id="e-cargo" list="e-cargos" value="Soldador" placeholder="digite um cargo…"></div>
+          <datalist id="e-cargos"></datalist>
+          <div class="chips" style="margin-top:12px">
+            <button class="chip e-ex">Soldador</button><button class="chip e-ex">Pedreiro</button>
+            <button class="chip e-ex">Eletricista (NR-10)</button><button class="chip e-ex">Motoboy</button>
+            <button class="chip e-ex">Técnica de enfermagem</button><button class="chip e-ex">Recepcionista</button>
+          </div>
+          <div class="c-nota">Função administrativa? Sai a frase de <b>ergonomia</b> (NR-6, sem EPI específico).
+          Cargo não mapeado? EPIs básicos + aviso <b>[CONFERIR O EPI ESPECÍFICO DA FUNÇÃO]</b> — nunca chuta calado.
+          No <b>demissional</b>, EPI não entra (regra do produto).</div>
+        </div>
+        <div class="fmini">
+          <div class="f-lab">Camada reconhecida</div>
+          <div id="e-badge"></div>
+          <div class="f-lab">EPIs sugeridos</div>
+          <div class="pills" id="e-pills"></div>
+          <div class="f-lab" style="margin-top:12px">A frase blindada que entra na ficha</div>
+          <div class="fcampo" id="e-frase" style="max-height:180px; overflow:auto"></div>
+        </div>
+      </div>
+      <a class="verdemo" href="demo.html">🎮 Ver o EPI mudando dentro da ficha, na demo →</a>
+    </div>
+
+    <!-- 04 · SAÚDE DA MULHER -->
+    <div class="widget" id="w-mulher">
+      <div class="w-num">POR DENTRO · 04</div>
+      <h3 class="rv">Saúde da mulher: da DUM ao <em>texto pronto</em>.</h3>
+      <p class="w-sub rv d1">Ciclos, ACO, menopausa, histerectomia, amenorreia, DUM com calendário — cada combinação
+      gera o texto ginecológico certo no REFERE <b>e</b> a observação abreviada de até 30 caracteres no campo da DUM.
+      Sem nada marcado, a ficha registra <b>NEGA GRAVIDEZ</b>. E se a DUM passar de 35 dias, o atraso entra
+      documentado com orientação de investigação.</p>
+      <div class="lab rv d2">
+        <div class="controles">
+          <div class="c-tit">Situação referida (clique)</div>
+          <div class="chips">
+            <button class="chip m-ch" data-k="ciclosReg">Ciclos regulares</button>
+            <button class="chip m-ch" data-k="aco">Usa ACO</button>
+            <button class="chip m-ch" data-k="menopausa">Menopausa</button>
+            <button class="chip m-ch" data-k="histerectomia">Histerectomia</button>
+            <button class="chip m-ch" data-k="amenorreia">Amenorreia</button>
+          </div>
+          <div class="c-linha">DUM: <input type="text" id="m-dum" placeholder="dd/mm/aaaa" maxlength="10"></div>
+          <div class="c-nota">Regra clínica embutida: menopausa/histerectomia/amenorreia <b>não</b> disparam
+          "atraso a investigar" — amenorreia esperada não é atraso.</div>
+        </div>
+        <div class="fmini">
+          <div class="f-lab">Último tópico do REFERE</div>
+          <div class="fcampo" id="m-refere"></div>
+          <div class="f-lab" style="margin-top:12px">Campo "Observações" da DUM <span class="tagz">máx. 30 caracteres</span></div>
+          <div class="obs30"><div class="fcampo" id="m-obs"></div><span class="cnt" id="m-cnt">0/30</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 · OS 4 BOTÕES -->
+    <div class="widget" id="w-botoes">
+      <div class="w-num">POR DENTRO · 05</div>
+      <h3 class="rv">O plantão em <em>① ② ③ ④</em>.</h3>
+      <p class="w-sub rv d1">Quatro botões numerados no painel. Três são do robô. O quarto termina com
+      <b>um clique seu</b> — e isso é proposital.</p>
+      <div class="btl rv d2">
+        <div class="bcard" id="b-1">
+          <div class="bn">①</div><h4>Liberar resultado</h4>
+          <p>De <b>qualquer tela</b>, navega até o Resultado de Exames, acha o lápis certo, marca <b>Normal</b>,
+          escolhe o prestador e salva. Com mais de um exame, <b>não age</b> — avisa e deixa com você.</p>
+        </div>
+        <div class="bcard" id="b-2">
+          <div class="bn">②</div><h4>Abrir ficha</h4>
+          <p>Leva até a Ficha Clínica e a deixa <b>em edição</b>, pronta: você escolhe Homem/Mulher, marca as
+          condições e clica o tipo de exame — a ficha inteira se escreve.</p>
+        </div>
+        <div class="bcard" id="b-3">
+          <div class="bn">③</div><h4>Liberar ASO</h4>
+          <p>O botão-cadeia: emissor = o médico da ficha, <b>Apto + validade</b> (inclusive pareceres especiais
+          visíveis), salva, aciona a impressão e <b>abre a aba de assinatura</b>.</p>
+        </div>
+        <div class="bcard humano" id="b-4">
+          <div class="bn">④</div><h4>Assinatura — sua</h4>
+          <p>O robô prepara biometria, PDF e certificado (pelo seu CPF). Aí <b>pisca o "Iniciar Assinatura"</b>
+          e espera o SEU clique. Depois, detecta o fim pelos efeitos e fecha tudo.</p>
+        </div>
+      </div>
+      <div class="c-linha" style="margin-top:18px">
+        <button class="play" id="b-play">▶ Ver o encadeamento</button>
+        <span class="bstatus" id="b-status"></span>
+      </div>
+      <a class="verdemo" href="demo.html#tour">🎬 Fazer o tour completo do plantão na demo →</a>
+    </div>
+
+    <!-- 06 · GUIA SOC -->
+    <div class="widget" id="w-guia">
+      <div class="w-num">POR DENTRO · 06</div>
+      <h3 class="rv">Guia SOC: a fila da clínica a <em>um clique</em>.</h3>
+      <p class="w-sub rv d1">A segunda aba do painel é um copiloto de navegação. <b>Abrir colaborador</b>: digite só
+      o nome — ele monta a Pesquisa Avançada (SOCNET + todos os status), procura e abre a ficha.
+      <b>Sala de espera</b>: escolha a clínica (e o dia) — ele troca a agenda, navega o calendário, abre a sala e
+      aplica os filtros. A fila chega <b>já filtrada em Clínico Geral · Médico</b>.</p>
+      <div class="lab rv d2">
+        <div class="controles">
+          <div class="c-tit">Sala de espera — como você faria na mão</div>
+          <ol class="gpassos" id="g-passos">
+            <li>Abrir o programa 236 (Agenda)</li>
+            <li>Achar o botão "Trocar Agenda"</li>
+            <li>Identificar a agenda da clínica certa</li>
+            <li>Navegar o calendário até o dia</li>
+            <li>Revelar o painel de ícones (>>)</li>
+            <li>Clicar "Sala de Atendimento"</li>
+            <li>Aplicar 4 filtros (situação, especialidade, período, sala)</li>
+            <li>Clicar Procurar — fechando pop-ups no caminho</li>
+          </ol>
+          <div class="gvs">≈ 8 passos, em telas diferentes, com avisos pra fechar.</div>
+        </div>
+        <div class="controles">
+          <div class="c-tit">Com o Guia SOC</div>
+          <div class="c-linha">
+            <select id="g-clinica" style="background:var(--card); border:1px solid var(--line2); color:var(--ink); border-radius:9px; padding:9px 11px; font-family:inherit; font-size:14px;">
+              <option>CLÍNICA DEMO · CENTRO</option><option>CLÍNICA DEMO · NORTE</option><option>CLÍNICA DEMO · SUL</option>
+            </select>
+            <button class="play" id="g-play">🏥 Abrir sala de espera</button>
+          </div>
+          <div class="bstatus" id="g-status" style="min-height:44px; margin-top:16px"></div>
+          <div class="c-nota">Robusto de verdade: fecha só avisos informativos (nunca "Confirmar/Excluir"),
+          <b>um voo por vez</b> (pedir outra sala cancela o anterior) e, se a clínica atende por ordem de chegada,
+          ele <b>avisa</b> em vez de fingir que abriu.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 · ASSINATURA -->
+    <div class="widget" id="w-ass">
+      <div class="w-num">POR DENTRO · 07</div>
+      <h3 class="rv">O robô prepara tudo. O clique final é <em>seu</em> — por desenho.</h3>
+      <p class="w-sub rv d1">O navegador só libera o certificado digital com um <b>gesto humano real</b> — a mesma
+      trava do gov.br e dos bancos. O Auto-Ficha abraça isso: encadeia biometria → PDF no SOCGED → certificado
+      (escolhido pelo <b>seu CPF, travado na licença</b>), pisca o botão e espera VOCÊ clicar. Depois, detecta a
+      conclusão <b>pelos efeitos na tela</b> — não por botões que mudam de lugar — e fecha os dois "Finalizar" e a aba.
+      Sua assinatura permanece um <b>ato pessoal e intencional</b>. Experimente:</p>
+      <div class="lab rv d2">
+        <div class="controles">
+          <div class="c-tit">Por que isso te protege</div>
+          <ul class="gpassos" style="margin-top:0">
+            <li class="ok">Quem aciona o certificado é o médico — manifestação de vontade sua</li>
+            <li class="ok">CPF não bate com o certificado? O robô <b>para e avisa</b> — nunca assina no chute</li>
+            <li class="ok">Só diz "✅ assinado" com <b>prova positiva</b> na tela — sem prova, pede sua conferência</li>
+            <li class="ok">Já atravessou a repaginação do SOC de 2026 sem quebrar</li>
+          </ul>
+          <button class="play" id="a-play" style="margin-top:16px">▶ Simular a assinatura</button>
+        </div>
+        <div>
+          <div class="assmini">
+            <h6>Assinatura digital — SOCGED* (simulação)</h6>
+            <div class="passo-a" id="a-p1"><span class="pnum">1</span> Capturar biometria <span class="spin"></span></div>
+            <div class="passo-a" id="a-p2"><span class="pnum">2</span> Gerar PDF no SOCGED <span class="spin"></span></div>
+            <div class="passo-a" id="a-p3"><span class="pnum">3</span> Assinar PDF digitalmente <span class="spin"></span></div>
+            <div class="passo-a" id="a-p4"><span class="pnum">4</span> Gerar arquivo assinado <span class="spin"></span></div>
+            <div style="margin:10px 0; font-size:10px">Certificado: <select id="a-cert" disabled style="width:100%"><option></option><option>DEMONSTRACAO EXEMPLO:***001-91 (A3)</option></select></div>
+            <button class="bt-iniciar" id="a-iniciar" disabled>Iniciar Assinatura</button>
+            <div class="carimbo" id="a-carimbo">✔ ASSINADO DIGITALMENTE<br>ICP-Brasil (fictício)</div>
+          </div>
+          <div class="bstatus" id="a-status" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08 · DOIS MODELOS -->
+    <div class="widget" id="w-modelos">
+      <div class="w-num">POR DENTRO · 08</div>
+      <h3 class="rv">Duas fichas diferentes. <em>Zero</em> configuração.</h3>
+      <p class="w-sub rv d1">O SOC tem dois modelos de ficha clínica — e o painel <b>detecta sozinho</b> qual está
+      aberto (aparece "Ficha: SOC padrão" ou "Ficha: PRONTOMED" no topo; um clique força a troca). Os textos se
+      adaptam ao modelo, sem você escolher nada.</p>
+      <div class="modelos rv d2">
+        <div class="mcard">
+          <h4>SOC padrão</h4>
+          <div class="mtag">prontuário por itens 01–27</div>
+          <ul>
+            <li>Questionário numerado marcado item a item, coerente com o texto</li>
+            <li>Texto Livre em dois campos: exame físico + ficha clínica (REFERE + 18 negativas)</li>
+            <li>EPI por função, turnos, pausas, metas — com as respostas padrão</li>
+            <li>Observações Médicas com o termo de <b>atestação</b> e Conclusão "Apto" proposta</li>
+          </ul>
+        </div>
+        <div class="mcard">
+          <h4>PRONTOMED <span class="mtag">(via SOCNET)</span></h4>
+          <div class="mtag">exame médico por 13 sistemas</div>
+          <ul>
+            <li>Cada quadro: ☑ Normal + <b>Obs técnica pericial</b> com correlação ocupacional</li>
+            <li>Preserva o que você digitou — só substitui o texto genérico do sistema</li>
+            <li>Respostas negativas padrão que <b>respeitam</b> o que foi referido (fumante, deficiência, álcool)</li>
+            <li>Datas preenchidas com o dia do atendimento</li>
+          </ul>
+          <details><summary>ver 3 exemplos reais das Obs por sistema</summary>
+            <div class="mobs" id="mo-sistemas"></div>
+          </details>
+        </div>
+      </div>
+      <a class="verdemo" href="demo.html">🎮 Alternar SOC padrão ↔ PRONTOMED na demo →</a>
+    </div>
+  </section>
+
+  <!-- ============ ÉTICA ============ -->
+  <section id="etica">
+    <div class="s-eyebrow rv">A consciência do produto</div>
+    <h2 class="rv d1">Acelera o trabalho. <em>Não substitui</em> o ato médico.</h2>
+    <div class="par">
+      <div class="pcard2 rv d1">
+        <h3>O que faz</h3>
+        <ul>
+          <li>Preenche o <b>padrão do exame sem alterações</b> — pressupõe que você de fato examinou</li>
+          <li>Escreve a blindagem técnico-jurídica: não-nexo, EPI com base legal, NR-1 no admissional</li>
+          <li>Navega o SOC, emite o ASO e <b>prepara</b> a assinatura</li>
+          <li>Propõe "Apto" — <b>a conclusão é sempre decisão sua</b></li>
+        </ul>
+      </div>
+      <div class="pcard2 alt rv d2">
+        <h3>O que NUNCA faz</h3>
+        <ul>
+          <li><b>Não envia nada</b> — o salvamento é sempre seu</li>
+          <li>Não assina — <b>sem o seu clique, não existe assinatura</b></li>
+          <li>Não chuta certificado — CPF errado, ele <b>para e avisa</b></li>
+          <li>Não esconde nada — <b>você revisa tudo na tela antes</b></li>
+        </ul>
+      </div>
+    </div>
+    <div class="citacao rv d2">
+      <p>"Havendo qualquer achado em um aparelho, <b>edite aquele campo antes de salvar</b>.
+      O texto é o ponto de partida. <b>Você é o ponto final.</b>"</p>
+      <div class="divisor"></div>
+      <div class="mantras">
+        <span class="mantra">A medicina vem <b>sempre</b> em primeiro lugar</span>
+        <span class="mantra">Confira e salve <b>você mesmo</b></span>
+        <span class="mantra">Você revisa e <b>assina</b></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMO FUNCIONA ============ -->
+  <section id="como">
+    <div class="s-eyebrow rv">Do pagamento ao plantão</div>
+    <h2 class="rv d1">Funcionando em <em>menos de 5 minutos</em>.</h2>
+    <div class="passos">
+      <div class="passo rv d1"><h3>Assine</h3><p>Cartão com renovação automática ou PIX mês a mês. <b>R$ 59,90/mês</b>, cancele quando quiser.</p></div>
+      <div class="passo rv d2"><h3>Cadastre-se</h3><p>Nome, CPF, e-mail e empresa — e você cria o seu <b>PIN</b> de 4 a 6 números.</p></div>
+      <div class="passo rv d3"><h3>Receba no e-mail</h3><p>Chega o <b>seu favorito pessoal</b>. Arrasta pra barra do navegador — em qualquer computador em que você atenda.</p></div>
+      <div class="passo rv d4"><h3>PIN e bom turno</h3><p>No SOC, clica no favorito, digita o PIN e o acesso libera por <b>4 horas</b>. O resto é atender.</p></div>
+    </div>
+
+    <div class="just rv">
+      <p>"Cada acesso gera um custo. A assinatura mantém a ferramenta <b>funcionando</b> e financia as
+      melhorias que facilitam e agilizam o atendimento do médico — porque toda inovação que nos poupa
+      tempo dá trabalho, e tem custo, para existir."</p>
+      <div class="quem">— <b>Dr. André Rodrigues</b> · médico do trabalho · criador do Auto-Ficha PRO</div>
+    </div>
+  </section>
+
+  <!-- ============ PREÇO ============ -->
+  <section id="preco">
+    <div class="s-eyebrow rv">Assinatura</div>
+    <h2 class="rv d1">Menos que <em>um almoço por semana</em>. Horas de plantão de volta.</h2>
+    <div class="preco-grid">
+      <ul class="inclui rv d1">
+        <li><b>Fluxo completo do ASO</b> — resultado, ficha, emissão e assinatura digital</li>
+        <li><b>A ficha inteligente</b> — condições com blindagem, 18 negativas coerentes, EPI por função com CLT art. 158</li>
+        <li><b>Saúde da mulher completa</b> — DUM com calendário, amenorreia, NEGA GRAVIDEZ, Obs de 30c</li>
+        <li><b>Guia SOC</b> — colaborador por nome + salas de espera de todas as unidades</li>
+        <li><b>Acesso pessoal por CPF</b> — certificado certo, sempre, sem digitar</li>
+        <li><b>Turnos de 4h por PIN</b> — do jeito que o plantão funciona</li>
+        <li><b>Atualizações contínuas</b> — quando o SOC muda, o Auto-Ficha acompanha</li>
+        <li><b>Suporte direto</b> com quem fez a ferramenta</li>
+      </ul>
+      <div class="pcard rv d2">
+        <div class="tag">TURMA DE LANÇAMENTO · VAGAS LIMITADAS</div>
+        <div class="plano">Auto-Ficha PRO · Individual</div>
+        <div class="valor"><small>R$</small> 59<span class="cents">,90</span><small>/mês</small></div>
+        <div class="por">por médico(a) · vinculado ao seu CPF · sem fidelidade</div>
+        <a class="bt bt-g" href="https://mpago.la/314iDci" target="_blank" rel="noopener">
+           💳 Assinar com cartão — renova sozinho</a>
+        <a class="bt bt-o" href="https://mpago.la/1ouCoK4" target="_blank" rel="noopener" style="margin-top:10px;width:100%">
+           💠 Pagar com PIX — R$ 59,90</a>
+        <div class="mini">Acesso <b>imediato por e-mail</b> após o cadastro · Cancele quando quiser<br>
+        <b>Cartão</b> renova sozinho todo mês · <b>PIX</b> você renova mês a mês (a gente te lembra)</div>
+        <a class="ja" href="cadastro.html">Já paguei → fazer meu cadastro e receber o acesso</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section id="faq">
+    <div class="s-eyebrow rv">Perguntas de médico</div>
+    <h2 class="rv d1">O que todo mundo pergunta <em>antes de assinar</em>.</h2>
+    <div class="faq rv d2">
+      <details class="fq">
+        <summary>A assinatura digital é minha mesmo? Isso é seguro juridicamente?</summary>
+        <div class="a">Sim — e esse é o ponto forte do desenho. O robô prepara tudo, mas o clique no
+        <b>"Iniciar Assinatura" é seu, obrigatoriamente</b>: o navegador exige gesto humano pra liberar o
+        certificado digital (a mesma trava de segurança do gov.br e dos bancos). A assinatura permanece um
+        ato pessoal e intencional do titular — o sistema só elimina a burocracia em volta dele.</div>
+      </details>
+      <details class="fq">
+        <summary>Preciso de quê pra usar?</summary>
+        <div class="a">Do SOC (o sistema que você já usa), do seu <b>certificado digital</b> instalado e
+        funcionando no navegador (o mesmo que você já usa pra assinar) e do favorito que chega no seu e-mail.
+        Não instala programa, não pede senha do SOC, não mexe na sua máquina.</div>
+      </details>
+      <details class="fq">
+        <summary>Posso usar em mais de um computador?</summary>
+        <div class="a">Pode — <b>você</b>, em quantos computadores atender: é só abrir o e-mail e instalar o
+        favorito lá. O que não pode é dividir a licença: o acesso é vinculado ao seu CPF, o CPF vem travado
+        do servidor, e uso simultâneo em máquinas diferentes é monitorado e leva a bloqueio.</div>
+      </details>
+      <details class="fq">
+        <summary>E se o SOC mudar de layout de novo?</summary>
+        <div class="a">Manter o Auto-Ficha funcionando quando o SOC muda é exatamente o serviço que a
+        assinatura paga. A ferramenta já atravessou a repaginação de 2026 sem quebrar — a arquitetura
+        detecta o fluxo <b>pelos efeitos na tela</b>, não por botões fixos, e o time acompanha cada mudança.</div>
+      </details>
+      <details class="fq">
+        <summary>O robô assina sozinho? E se ele errar um parecer?</summary>
+        <div class="a"><b>Não existe ato médico automático aqui.</b> O preenchimento chega pronto pra sua
+        conferência, o parecer é o que você definir, e nada é assinado sem o seu clique. Você valida cada
+        salvamento — o Auto-Ficha corta cliques, não responsabilidade.</div>
+      </details>
+      <details class="fq">
+        <summary>Meus dados e os dos pacientes passam por onde?</summary>
+        <div class="a">Os dados clínicos <b>ficam no SOC</b>, onde sempre estiveram — o Auto-Ficha roda no seu
+        navegador, dentro da sua sessão. O servidor de licenças guarda apenas o seu cadastro de assinante
+        (nome, CPF, e-mail, empresa) pra validar o acesso. Nada de paciente sai do SOC.</div>
+      </details>
+      <details class="fq">
+        <summary>Como cancelo?</summary>
+        <div class="a">Quando quiser, sem multa e sem fidelidade: cancela a recorrência (cartão) ou
+        simplesmente não renova o PIX. O acesso vale até o fim do período já pago.</div>
+      </details>
+      <details class="fq">
+        <summary>Esqueci meu PIN / troquei de CPF no conselho — e agora?</summary>
+        <div class="a">Fala com o suporte (o contato vai no seu e-mail de acesso). PIN a gente redefine na
+        hora; troca de CPF é análise manual — justamente porque é a trava que protege a sua licença.</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL ============ -->
+  <div class="final">
+    <div class="s-eyebrow rv" style="justify-content:center">O próximo turno pode ser diferente</div>
+    <h2 class="rv d1">Chegou a hora de o SOC trabalhar <em>pra você</em>.</h2>
+    <p class="s-sub rv d2" style="max-width:36em">Entre na sala de demonstração e sinta a ficha se escrever — ou assine agora e
+    atenda o próximo plantão em 5 cliques por ASO.</p>
+    <div class="ctas rv d3" style="justify-content:center">
+      <a class="bt bt-g" href="#preco">Assinar o Auto-Ficha PRO — R$ 59,90/mês</a>
+      <a class="bt bt-o" href="demo.html">🩺 Demo ao vivo</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span class="lg">⬩ Auto-Ficha <b style="color:var(--teal2)">PRO</b></span>
+    <span><b>Dr. André Felipe da Cunha Rodrigues</b> · CRM 5201261541-RJ</span>
+    <span style="width:100%;margin-top:6px;display:flex;gap:18px;flex-wrap:wrap">
+      <a href="minha-conta.html" style="color:var(--mut);text-decoration:none">Minha Conta</a>
+      <a href="termos.html" style="color:var(--mut);text-decoration:none">Termos de Uso</a>
+      <a href="privacidade.html" style="color:var(--mut);text-decoration:none">Política de Privacidade</a>
+    </span>
+  </div>
+</footer>
+
+<script src="motor-demo.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var M = window.AFMOTOR;
+
+  /* ---------- reveal on scroll ---------- */
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("on"); io.unobserve(e.target); } });
+  }, { threshold: .12 });
+  document.querySelectorAll(".rv").forEach(function (el) { io.observe(el); });
+
+  /* ============ 01 · INTELIGÊNCIA ============ */
+  var I_CONDS = ["has", "diabetes", "asma", "coluna", "visao", "ansiedade", "etilismo"];
+  var iSel = [], iAnsiMed = false, iPrevKeys = [], iPrevCut = {};
+  (function () {
+    var html = "";
+    I_CONDS.forEach(function (id) {
+      html += '<button class="chip i-ch" data-id="' + id + '">' + M.TEXTOS.condicoes[id].label + "</button>";
+    });
+    $("i-chips").innerHTML = html;
+    var negas = M.TEXTOS.nega.split("\n"), nh = "";
+    negas.forEach(function (n, ix) { nh += '<div class="ng" id="ing-' + ix + '">' + n + "</div>"; });
+    $("i-negas").innerHTML = nh;
+    var ITENS = [["01","Pressão Alta"],["03","Diabetes"],["06","Asma/Bronquite"],["08","Visão"],["09","Coluna"],
+                 ["12","Medicamentos"],["14","Doenças relevantes"],["16","Etilismo"]];
+    var ph = "";
+    ITENS.forEach(function (it) { ph += '<span class="pill" id="ipl-' + it[0] + '">☑ ' + it[0] + " · " + it[1] + "</span>"; });
+    $("i-pills").innerHTML = ph;
+  })();
+  function iRender() {
+    var A = M.analisar({ sexo: "homem", tipo: "periodico", ids: iSel, extras: { ansiedadeMed: iAnsiMed } });
+    var wrap = $("i-refere"); wrap.innerHTML = "";
+    var keys = [];
+    A.refere.forEach(function (r, ix) {
+      keys.push(r.key);
+      var d = document.createElement("div");
+      d.className = "rl" + (iPrevKeys.indexOf(r.key) === -1 ? " add" : "");
+      d.textContent = (ix + 1) + ") " + r.texto;
+      wrap.appendChild(d);
+    });
+    iPrevKeys = keys;
+    $("i-hd").style.display = A.refere.length ? "block" : "none";
+    var nx = $("i-nexo");
+    if (A.nexo) { nx.textContent = A.nexo; nx.style.display = "block"; } else { nx.style.display = "none"; }
+    A.negas.forEach(function (n, ix) { $("ing-" + ix).classList.toggle("cut", n.removida); });
+    var marcados = {};
+    A.idsFicha.forEach(function (id) { var n = M.ITEM_NUM[id]; if (n) marcados[n] = id; });
+    document.querySelectorAll("[id^='ipl-']").forEach(function (p) {
+      var num = p.id.slice(4), on = !!marcados[num];
+      p.classList.toggle("on", on);
+      p.classList.toggle("dz", on && (num === "12" || (num === "14" && iSel.indexOf("ansiedade") !== -1)));
+    });
+    $("i-ansimed-row").style.display = iSel.indexOf("ansiedade") !== -1 ? "flex" : "none";
+  }
+  document.querySelectorAll(".i-ch").forEach(function (ch) {
+    ch.addEventListener("click", function () {
+      var id = ch.getAttribute("data-id"), ix = iSel.indexOf(id);
+      if (ix === -1) iSel.push(id); else iSel.splice(ix, 1);
+      ch.classList.toggle("on", ix === -1);
+      iRender();
+    });
+  });
+  $("i-ansimed-chip").addEventListener("click", function () {
+    iAnsiMed = !iAnsiMed; this.classList.toggle("on", iAnsiMed); iRender();
+  });
+  iRender();
+
+  /* ============ 02 · TABAGISMO ============ */
+  function tRender() {
+    var cig = $("t-cig").value, anos = $("t-anos").value;
+    var c = parseFloat(String(cig).replace(",", ".")), a = parseFloat(String(anos).replace(",", "."));
+    if (c > 0 && a > 0) {
+      var carga = Math.round((c / 20) * a * 10) / 10;
+      $("t-formula").textContent = "(" + cig + " ÷ 20) × " + anos + " = " + String(carga).replace(".", ",") + " anos-maço";
+    } else {
+      $("t-formula").textContent = "(cigarros ÷ 20) × anos = X anos-maço";
+    }
+    $("t-texto").textContent = M.textoTabagismo({ fumoCig: cig, fumoAnos: anos });
+  }
+  $("t-cig").addEventListener("input", tRender);
+  $("t-anos").addEventListener("input", tRender);
+  tRender();
+
+  /* ============ 03 · EPI ============ */
+  $("e-cargos").innerHTML = M.CARGOS_SUGERIDOS.map(function (c) { return '<option value="' + c + '">'; }).join("");
+  function eRender() {
+    var cargo = $("e-cargo").value;
+    var r = M.epiPorCargo(cargo);
+    var badge = r.tipo === "admin"
+      ? '<span class="badge-tipo admin">🗂 Administrativa — sem EPI específico (frase de ergonomia)</span>'
+      : r.tipo === "risco"
+        ? '<span class="badge-tipo risco">⚙ Operacional por risco — ' + r.epis.length + ' EPI(s), grupos acumulados</span>'
+        : '<span class="badge-tipo default">📦 Não mapeado — EPIs básicos + [CONFERIR O EPI ESPECÍFICO DA FUNÇÃO]</span>';
+    $("e-badge").innerHTML = badge;
+    $("e-pills").innerHTML = r.epis.length
+      ? r.epis.map(function (e) { return '<span class="pill epi">' + e + "</span>"; }).join("")
+      : '<span class="pill">— função administrativa: orientação de ergonomia, sem lista de EPI</span>';
+    $("e-frase").textContent = M.fraseEPI(r);
+  }
+  $("e-cargo").addEventListener("input", eRender);
+  document.querySelectorAll(".e-ex").forEach(function (b) {
+    b.addEventListener("click", function () { $("e-cargo").value = b.textContent; eRender(); });
+  });
+  eRender();
+
+  /* ============ 04 · SAÚDE DA MULHER ============ */
+  var mSt = {};
+  function mRender() {
+    var m = {
+      ciclosReg: !!mSt.ciclosReg, aco: !!mSt.aco, menopausa: !!mSt.menopausa,
+      histerectomia: !!mSt.histerectomia, amenorreia: !!mSt.amenorreia, amenorreiaTxt: "", dum: $("m-dum").value
+    };
+    var usada = M.mulherUsada(m);
+    $("m-refere").textContent = usada ? M.textoMulherLivre(m) : "— (nenhum campo marcado: não entra tópico no REFERE)";
+    var obs = usada ? M.abrevMulher(m) : M.TEXTOS.negaGravidez;
+    $("m-obs").textContent = obs;
+    $("m-cnt").textContent = obs.length + "/30";
+  }
+  document.querySelectorAll(".m-ch").forEach(function (ch) {
+    ch.addEventListener("click", function () {
+      var k = ch.getAttribute("data-k");
+      mSt[k] = !mSt[k];
+      ch.classList.toggle("on", !!mSt[k]);
+      mRender();
+    });
+  });
+  $("m-dum").addEventListener("input", function () {
+    var v = this.value.replace(/\D/g, "").slice(0, 8);
+    if (v.length > 4) v = v.slice(0, 2) + "/" + v.slice(2, 4) + "/" + v.slice(4);
+    else if (v.length > 2) v = v.slice(0, 2) + "/" + v.slice(2);
+    this.value = v;
+    mRender();
+  });
+  mRender();
+
+  /* ============ 05 · 4 BOTÕES ============ */
+  var bRodando = false;
+  $("b-play").addEventListener("click", async function () {
+    if (bRodando) return; bRodando = true;
+    var st = $("b-status");
+    var seq = [
+      ["b-1", "① navegando… lápis → Normal → prestador → salvo ✓"],
+      ["b-2", "② ficha em edição — condições + tipo de exame → escrita ✓"],
+      ["b-3", "③ Apto + validade + emissor → salvo → aba de assinatura aberta ✓"],
+      ["b-4", "④ biometria + PDF + certificado prontos… <b>esperando o SEU clique</b> 👆"]
+    ];
+    document.querySelectorAll(".bcard").forEach(function (c) { c.classList.remove("ligado"); });
+    for (var i = 0; i < seq.length; i++) {
+      $(seq[i][0]).classList.add("ligado");
+      st.innerHTML = seq[i][1];
+      await new Promise(function (r) { setTimeout(r, 1400); });
+    }
+    st.innerHTML = "1 clique seu no \"Iniciar Assinatura\" → o robô detecta pelos efeitos → Finalizar ×2 → aba fechada. <b>✅</b>";
+    bRodando = false;
+  });
+
+  /* ============ 06 · GUIA SOC ============ */
+  var gRodando = false;
+  $("g-play").addEventListener("click", async function () {
+    if (gRodando) return; gRodando = true;
+    var lis = document.querySelectorAll("#g-passos li");
+    lis.forEach(function (li) { li.classList.remove("ok"); });
+    var st = $("g-status");
+    st.innerHTML = "🤖 voando: agenda → <b>" + $("g-clinica").value + "</b> → dia → sala → filtros…";
+    for (var i = 0; i < lis.length; i++) {
+      await new Promise(function (r) { setTimeout(r, 320); });
+      lis[i].classList.add("ok");
+    }
+    st.innerHTML = "✅ Fila aberta <b>já filtrada em Clínico Geral · Médico</b> — os 8 passos foram do robô. Seu clique: <b>1</b>.";
+    gRodando = false;
+  });
+
+  /* ============ 07 · ASSINATURA ============ */
+  var aEtapa = "pronto";
+  function aPasso(id) {
+    var p = $(id); p.classList.add("rodando");
+    return new Promise(function (r) { setTimeout(function () { p.classList.remove("rodando"); p.classList.add("feito"); r(); }, 800); });
+  }
+  $("a-play").addEventListener("click", async function () {
+    if (aEtapa !== "pronto") return;
+    aEtapa = "rodando";
+    ["a-p1","a-p2","a-p3","a-p4"].forEach(function (id) { $(id).classList.remove("feito"); });
+    $("a-carimbo").style.display = "none";
+    $("a-status").innerHTML = "🤖 o robô prepara: biometria → PDF no SOCGED → certificado pelo seu CPF…";
+    await aPasso("a-p1"); await aPasso("a-p2");
+    $("a-cert").disabled = false; $("a-cert").selectedIndex = 1;
+    $("a-iniciar").disabled = false; $("a-iniciar").classList.add("halo");
+    $("a-status").innerHTML = "👉 agora é com você: clique no <b>\"Iniciar Assinatura\"</b> — só o gesto humano libera o certificado.";
+    aEtapa = "iniciar";
+  });
+  $("a-iniciar").addEventListener("click", async function () {
+    if (aEtapa !== "iniciar") return;
+    aEtapa = "rodando";
+    this.classList.remove("halo"); this.disabled = true;
+    $("a-status").innerHTML = "🤖 clique detectado <b>pelos efeitos</b> — assinando…";
+    await aPasso("a-p3"); await aPasso("a-p4");
+    $("a-carimbo").style.display = "block";
+    $("a-status").innerHTML = "✅ assinado — Finalizar, Finalizar, aba fechada. Total de cliques seus: <b>1</b>. <span style='color:var(--mut2)'>(▶ pra repetir)</span>";
+    $("a-cert").disabled = true; $("a-cert").selectedIndex = 0;
+    aEtapa = "pronto";
+  });
+
+  /* ============ 08 · MODELOS — 3 Obs verbatim ============ */
+  (function () {
+    var picks = [["respiratorio","Aparelho Respiratório"],["maosPunhos","Mãos e Punhos"],["coluna","Coluna"]];
+    $("mo-sistemas").innerHTML = picks.map(function (p) {
+      return "<b>" + p[1] + ":</b> " + M.TEXTOS.sistemas[p[0]];
+    }).join("<br><br>");
+  })();
+})();
+</script>
+</body>
+</html>

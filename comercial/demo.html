@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Auto-Ficha PRO — Sala de demonstração</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Instrument+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#14b8a6; --teal2:#2dd4bf; --teal-deep:#0f766e; --bg:#060e13; --bg2:#0a1720;
+    --gold:#fbbf24; --lar:#f59e0b; --ink:#e7f0ee; --mut:#8fa8a3; --mut2:#64807b;
+    --mono:'Spline Sans Mono',ui-monospace,monospace;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); font-family:'Instrument Sans',-apple-system,sans-serif; min-height:100vh; color:var(--ink); }
+  ::selection { background:rgba(45,212,191,.3); }
+
+  /* ============ topo da demo ============ */
+  .topo-demo { position:sticky; top:0; z-index:60; background:rgba(6,14,19,.92); backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px); border-bottom:1px solid rgba(45,212,191,.15); }
+  .topo-demo .in { max-width:1280px; margin:0 auto; padding:10px 18px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .topo-demo b.marca { font-family:'Fraunces',serif; font-size:16px; white-space:nowrap; }
+  .topo-demo b.marca i { color:var(--teal2); font-style:normal; }
+  .tag-demo { background:rgba(251,191,36,.14); border:1px solid rgba(251,191,36,.4); color:var(--gold);
+    font-size:10.5px; font-weight:700; padding:4px 10px; border-radius:999px; letter-spacing:.04em; white-space:nowrap; }
+  .mtabs { display:flex; gap:6px; margin-left:6px; }
+  .mtab { background:transparent; border:1px solid rgba(148,163,184,.25); color:var(--mut); font-family:inherit;
+    font-size:12.5px; font-weight:600; padding:7px 14px; border-radius:999px; cursor:pointer; transition:all .2s; }
+  .mtab.on { background:rgba(45,212,191,.12); border-color:rgba(45,212,191,.5); color:var(--teal2); }
+  .placar { margin-left:auto; font-size:11.5px; color:var(--mut2); display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
+  .placar b { font-family:var(--mono); color:var(--teal2); font-size:13px; }
+  .placar .vc b { color:var(--gold); }
+  .bt-sair { background:linear-gradient(135deg,var(--teal2),var(--teal-deep)); color:#03110e; text-decoration:none;
+    font-weight:700; font-size:12.5px; padding:8px 16px; border-radius:9px; white-space:nowrap; }
+  @media (max-width:820px){ .placar{ display:none; } }
+
+  .palco { max-width:1280px; margin:16px auto 40px; padding:0 14px; display:grid; grid-template-columns:1fr 340px; gap:16px; align-items:start; }
+  @media (max-width:1000px){ .palco{ grid-template-columns:1fr; } .painel-wrap{ position:static !important; order:-1; } }
+  .modo { display:none; } .modo.on { display:block; }
+
+  .abre { max-width:1280px; margin:18px auto 0; padding:0 14px; }
+  .abre h1 { font-family:'Fraunces',serif; font-weight:600; font-size:clamp(22px,3.4vw,30px); }
+  .abre h1 em { font-style:italic; color:var(--teal2); }
+  .abre p { color:var(--mut); font-size:14.5px; margin-top:6px; max-width:62em; }
+  .abre p b { color:var(--ink); }
+
+  /* ============ janela fake do navegador + SOC ============ */
+  .janela { border-radius:12px; overflow:hidden; box-shadow:0 40px 90px -20px rgba(0,0,0,.8), 0 0 60px -20px rgba(20,184,166,.25);
+    border:1px solid rgba(148,163,184,.2); }
+  .jbar { background:#1c2733; padding:9px 14px; display:flex; align-items:center; gap:8px; }
+  .jdot { width:11px; height:11px; border-radius:50%; }
+  .jurl { flex:1; background:#0e1620; color:#93a6b8; border-radius:7px; font-size:11.5px; padding:5px 12px; font-family:var(--mono); }
+  .soc { background:#ebedf0; min-height:540px; font-family:Verdana,Arial,sans-serif; font-size:11px; color:#333; position:relative; }
+  .soc-topo { background:linear-gradient(180deg,#0d7a70,#0a5f57); color:#fff; padding:7px 12px; font-size:11.5px;
+    font-weight:bold; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .soc-topo .brand { background:#fff; color:#0a5f57; border-radius:4px; padding:1px 7px; font-size:10px; }
+  .soc-topo .emp { margin-left:auto; font-weight:normal; font-size:10px; opacity:.85; }
+  .soc-menu { background:#f4f5f7; border-bottom:1px solid #c9ced6; padding:5px 12px; display:flex; gap:4px; flex-wrap:wrap; }
+  .soc-menu a { color:#005ab4; text-decoration:none; font-size:10.5px; padding:3px 9px; border-radius:3px; cursor:pointer; }
+  .soc-menu a:hover { background:#e2e8f0; text-decoration:underline; }
+  .soc-menu a.aqui { background:#dde6f2; font-weight:bold; color:#333; text-decoration:none; cursor:default; }
+  .soc-corpo { padding:12px; }
+  .soc h4 { font-size:11.5px; background:#dfe4ec; border:1px solid #c9ced6; padding:5px 9px; margin-bottom:8px; color:#1a2b4a; }
+  .soc h4 .rot { font-weight:normal; }
+  table.soc-t { width:100%; border-collapse:collapse; background:#fff; margin-bottom:10px; }
+  .soc-t th { background:#e7ebf2; border:1px solid #c9ced6; padding:5px 7px; text-align:left; font-size:10.5px; color:#1a2b4a; }
+  .soc-t td { border:1px solid #d8dde5; padding:5px 7px; font-size:10.5px; }
+  .soc-t tr:nth-child(even) td { background:#f6f8fb; }
+  .botaoT { display:inline-block; background:linear-gradient(180deg,#fdfdfd,#dfe3ea); border:1px solid #9aa5b5;
+    border-radius:3px; padding:4px 12px; font-size:10.5px; font-family:Verdana,Arial; color:#222; cursor:pointer; }
+  .botaoT:hover { background:linear-gradient(180deg,#fff,#e9edf3); }
+  .soc input[type=text], .soc select, .soc textarea { border:1px solid #9aa5b5; border-radius:2px; padding:3px 5px;
+    font-family:Verdana,Arial; font-size:10.5px; background:#fff; color:#222; }
+  .lapis, .checkv { cursor:pointer; font-size:13px; }
+  .rot { color:#5a6a80; font-size:10px; }
+  .bolinha { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:3px; }
+  .b-am { background:#f4b400; } .b-vd { background:#34a853; } .b-lr { background:#ff7a1a; }
+  .soc-rodape { padding:6px 12px; color:#8a94a4; font-size:9.5px; border-top:1px solid #d8dde5; background:#ebedf0; }
+  .halo { animation:halo 1s infinite; border-radius:4px; }
+  @keyframes halo { 0%,100%{ box-shadow:0 0 0 2px rgba(255,153,51,.9), 0 0 14px rgba(255,153,51,.7);} 50%{ box-shadow:0 0 0 4px rgba(255,153,51,.4), 0 0 20px rgba(255,153,51,.4);} }
+  .tela { display:none; } .tela.on { display:block; }
+  .flash { animation:flash 1s ease; }
+  @keyframes flash { 0%{ background:#d8f8ef; } 100%{ background:transparent; } }
+
+  /* ---- ficha viva (modo explorar) ---- */
+  .fx-info { background:#f6f8fb; border:1px solid #d8dde5; padding:6px 9px; margin-bottom:8px; font-size:10.5px; display:flex; gap:16px; flex-wrap:wrap; }
+  .fx-info b { color:#1a2b4a; }
+  .fx-campo { margin-bottom:8px; }
+  .fx-campo .lab { font-size:10px; font-weight:bold; color:#1a2b4a; margin-bottom:3px; display:flex; align-items:center; gap:8px; }
+  .fx-campo .lab .rot { font-weight:normal; }
+  .autotxt { background:#fff; border:1px solid #9aa5b5; border-radius:2px; padding:6px 8px; font-family:Verdana,Arial;
+    font-size:10.5px; line-height:1.55; color:#222; white-space:pre-wrap; min-height:26px; }
+  .autotxt:empty::before { content:"—"; color:#aab4c2; }
+  details.fx-det { background:#fff; border:1px solid #9aa5b5; border-radius:2px; font-size:10.5px; }
+  details.fx-det summary { cursor:pointer; padding:6px 8px; color:#005ab4; font-size:10px; }
+  details.fx-det .autotxt { border:none; border-top:1px dashed #d8dde5; }
+  .vit-row { display:flex; gap:10px; flex-wrap:wrap; }
+  .vit-row label { font-size:10px; color:#5a6a80; }
+  .vit-row input { width:52px; text-align:center; }
+
+  /* o campo-estrela: REFERE + Nega, com animação */
+  .fxstar { background:#fff; border:1px solid #9aa5b5; border-radius:2px; padding:8px 10px; position:relative; min-height:120px; }
+  .fx-vazio { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center;
+    color:#8a94a4; font-size:11px; padding:16px; background:repeating-linear-gradient(45deg,#fdfdfd,#fdfdfd 12px,#f6f8fb 12px,#f6f8fb 24px); }
+  .fx-vazio b { color:#0f766e; }
+  .refere-hd { font-weight:bold; font-size:10.5px; color:#0b3a86; margin-bottom:3px; }
+  .rl { font-size:10.5px; line-height:1.5; padding:2px 4px; border-radius:3px; }
+  .rl.add { animation:rlin .8s ease; }
+  @keyframes rlin { 0%{ opacity:0; transform:translateY(-5px); background:#ccf3e8; } 60%{ background:#ccf3e8; } 100%{ opacity:1; transform:none; background:transparent; } }
+  .nexo { font-size:10.5px; line-height:1.5; margin:7px 0; padding:5px 7px; background:#f0fdf7; border-left:3px solid #0f766e; border-radius:0 3px 3px 0; }
+  .nexo.add { animation:rlin .8s ease; }
+  .ng { position:relative; font-size:10.5px; line-height:1.5; padding:1px 4px; color:#333;
+    max-height:34px; overflow:hidden; opacity:1;
+    transition:max-height .35s ease .75s, opacity .35s ease .75s, padding .35s ease .75s, color .3s ease; }
+  .ng::after { content:""; position:absolute; left:4px; top:55%; height:2px; width:0; background:#d33; transition:width .5s ease; }
+  .ng.cut { color:#c33; max-height:0; opacity:0; padding-top:0; padding-bottom:0; }
+  .ng.cut::after { width:96%; }
+
+  /* questionário do prontuário */
+  .quest { display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:2px 12px; background:#fff;
+    border:1px solid #9aa5b5; padding:7px 9px; }
+  .quest label { font-size:10px; color:#333; display:flex; align-items:flex-start; gap:5px; padding:2px 3px; border-radius:3px; }
+  .quest input { pointer-events:none; margin-top:1px; }
+  .quest label.mark { animation:flash 1.2s ease; font-weight:bold; color:#0a5f57; }
+  .quest .dedz { display:none; background:#0f766e; color:#fff; font-size:8px; padding:1px 5px; border-radius:999px; margin-left:2px; white-space:nowrap; }
+  .quest label.dz .dedz { display:inline-block; }
+  .radios4 { display:flex; gap:14px; flex-wrap:wrap; background:#fff; border:1px solid #9aa5b5; border-top:none; padding:6px 9px; font-size:10px; }
+  .radios4 span.rr b { color:#0a5f57; }
+
+  /* prontomed */
+  .pm-sist { background:#fff; border:1px solid #9aa5b5; }
+  .pm-row { border-bottom:1px dashed #d8dde5; padding:5px 8px; font-size:10.5px; }
+  .pm-row:last-child { border-bottom:none; }
+  .pm-row .nm { font-weight:bold; color:#1a2b4a; }
+  .pm-row .ok { color:#0a7a3d; font-weight:bold; }
+  .pm-row details { display:inline; }
+  .pm-row summary { display:inline; cursor:pointer; color:#005ab4; font-size:9.5px; }
+  .pm-row .obs { margin-top:4px; color:#444; font-size:9.8px; line-height:1.5; background:#f6f8fb; padding:5px 7px; border-radius:3px; white-space:pre-wrap; }
+  .pm-neg { display:flex; gap:16px; flex-wrap:wrap; background:#fff; border:1px solid #9aa5b5; padding:6px 9px; font-size:10px; margin-bottom:8px; }
+  .pm-neg b { color:#0a5f57; }
+
+  /* ============ painel Auto-Ficha réplica ============ */
+  .painel-wrap { position:sticky; top:64px; }
+  .painel { background:#fff; color:#0f172a; border-radius:16px; overflow:hidden; font-size:12px;
+    box-shadow:0 0 0 1px rgba(45,212,191,.3), 0 30px 70px -18px rgba(0,0,0,.7), 0 0 60px -18px rgba(20,184,166,.3); }
+  .p-cab { display:flex; align-items:center; gap:9px; padding:12px 15px; border-bottom:1px solid #e2e8f0; cursor:grab; }
+  .p-dot { width:9px; height:9px; border-radius:50%; background:#10b981; box-shadow:0 0 8px #10b981; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+  .p-tit b { font-size:13.5px; } .p-tit small { display:block; color:#64748b; font-size:9.5px; font-family:var(--mono); }
+  .p-timer { margin-left:auto; font-family:var(--mono); font-size:10.5px; color:#0f766e; font-weight:600;
+    background:#f0fdfa; border:1px solid #99f6e4; padding:3px 8px; border-radius:7px; }
+  .p-corpo { padding:12px 15px 14px; max-height:calc(100vh - 190px); overflow:auto; }
+  @media (max-width:1000px){ .p-corpo{ max-height:none; } }
+  .p-eyebrow { font-size:9px; letter-spacing:.12em; text-transform:uppercase; color:#94a3b8; font-weight:700; margin:0 0 7px; }
+  .p-modelo { font-size:10.5px; color:#334155; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:8px;
+    padding:6px 9px; margin-bottom:9px; cursor:pointer; user-select:none; }
+  .p-modelo b { color:#0f766e; }
+  .p-sexo { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:9px; }
+  .p-sexo button { font-family:inherit; font-size:11.5px; font-weight:700; padding:8px; border-radius:9px;
+    border:1px solid #e2e8f0; background:#fff; color:#64748b; cursor:pointer; }
+  .p-sexo button.on { background:#0f766e; border-color:#0f766e; color:#fff; }
+  .p-box { border:1px solid #e2e8f0; border-radius:10px; margin-bottom:9px; overflow:hidden; }
+  .p-box > .hd { padding:8px 10px; font-size:11px; font-weight:700; color:#0f766e; cursor:pointer; user-select:none;
+    display:flex; justify-content:space-between; background:#f8fafc; }
+  .p-box > .hd::after { content:"＋"; color:#94a3b8; }
+  .p-box.open > .hd::after { content:"−"; }
+  .p-box > .bd { display:none; padding:8px 10px 10px; }
+  .p-box.open > .bd { display:block; }
+  .p-box label.ck { display:flex; gap:7px; align-items:flex-start; font-size:10.8px; color:#334155; padding:3px 2px; cursor:pointer; border-radius:5px; }
+  .p-box label.ck:hover { background:#f0fdfa; }
+  .p-box label.ck input { margin-top:1px; accent-color:#0f766e; }
+  .p-sub { margin:2px 0 5px 22px; display:flex; gap:6px; align-items:center; flex-wrap:wrap; font-size:10.3px; color:#475569; }
+  .p-sub input[type=text], .p-sub input[type=number] { border:1px solid #cbd5e1; border-radius:6px; padding:4px 6px;
+    font-family:inherit; font-size:10.5px; width:64px; }
+  .p-sub input.larga { width:130px; }
+  .p-add { background:none; border:none; color:#0f766e; font-family:inherit; font-size:10.5px; font-weight:600; cursor:pointer; padding:3px 2px; }
+  .p-cargo { margin-bottom:9px; }
+  .p-cargo label { font-size:10px; font-weight:700; color:#64748b; display:block; margin-bottom:4px; }
+  .p-cargo input { width:100%; border:1px solid #cbd5e1; border-radius:8px; padding:8px 9px; font-family:inherit; font-size:11.5px; }
+  .p-tipos { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:9px; }
+  .p-tipos button { font-family:inherit; font-size:10.8px; font-weight:700; padding:9px 6px; border-radius:9px;
+    border:1px solid #99f6e4; background:#f0fdfa; color:#0f766e; cursor:pointer; transition:all .15s; }
+  .p-tipos button:hover { transform:translateY(-1px); background:#ccfbf1; }
+  .p-tipos button.on { background:#0f766e; color:#fff; border-color:#0f766e; }
+  .p-tipos button:last-child { grid-column:1 / -1; }
+  .p-tipos.puls button { animation:halo 1.1s infinite; }
+  .p-limpar { width:100%; font-family:inherit; font-size:11px; font-weight:700; padding:8px; border-radius:9px;
+    border:1px solid #fecaca; background:#fef2f2; color:#b91c1c; cursor:pointer; margin-bottom:9px; }
+  .p-toast { background:linear-gradient(135deg,#0f766e,#0c544d); color:#fff; border-radius:10px;
+    padding:9px 12px; font-weight:600; font-size:10.8px; line-height:1.5; }
+  .p-stats { margin-top:9px; display:flex; gap:8px; }
+  .p-stat { flex:1; border:1px solid #e2e8f0; border-radius:9px; padding:7px 9px; text-align:center; }
+  .p-stat .v { font-family:var(--mono); font-weight:700; font-size:15px; color:#0f766e; }
+  .p-stat .k { font-size:8.6px; color:#94a3b8; letter-spacing:.04em; text-transform:uppercase; }
+  .guia { margin-top:10px; background:rgba(45,212,191,.06); border:1px solid rgba(15,118,110,.35); border-radius:12px;
+    padding:11px 13px; font-size:12px; color:var(--ink); }
+  .guia b { color:var(--teal2); }
+  .banner-lar { display:none; margin-top:9px; background:#fff7ed; border:2px solid var(--lar); color:#9a3412;
+    border-radius:10px; padding:9px 12px; font-size:11px; font-weight:700; animation:halo 1.2s infinite; }
+
+  /* passos da assinatura (tour) */
+  .ass-wrap { display:flex; gap:12px; padding:4px; flex-wrap:wrap; }
+  .ass-doc { flex:1; min-width:250px; background:#fff; border:1px solid #c9ced6; padding:16px 18px; font-size:10px; line-height:1.6; }
+  .ass-doc h5 { text-align:center; font-size:11px; margin-bottom:8px; letter-spacing:.05em; }
+  .ass-doc .linha { border-bottom:1px dotted #aab4c2; padding:3px 0; display:flex; justify-content:space-between; gap:8px; }
+  .ass-doc .assin-area { margin-top:14px; border:1px dashed #9aa5b5; padding:10px; text-align:center; color:#8a94a4; }
+  .ass-doc .carimbo { display:none; color:#0a7a3d; border:2px solid #0a7a3d; border-radius:6px; padding:6px 10px;
+    font-size:9.5px; font-weight:bold; transform:rotate(-3deg); margin:8px auto 0; width:fit-content; }
+  .ass-modal { width:290px; background:#f7f8fa; border:1px solid #9aa5b5; border-radius:4px; padding:12px; }
+  .ass-modal h6 { font-size:10.5px; margin-bottom:10px; color:#1a2b4a; }
+  .passo-a { display:flex; align-items:center; gap:8px; padding:6px 8px; margin-bottom:5px; background:#fff;
+    border:1px solid #d8dde5; border-radius:3px; font-size:10px; color:#5a6a80; }
+  .passo-a .pnum { width:16px; height:16px; border-radius:50%; background:#dfe3ea; color:#5a6a80; display:flex;
+    align-items:center; justify-content:center; font-size:9px; font-weight:bold; flex:none; }
+  .passo-a.rodando { border-color:#f4b400; }
+  .passo-a.rodando .pnum { background:#fdefc3; }
+  .passo-a.feito { border-color:#0a7a3d; color:#0a7a3d; }
+  .passo-a.feito .pnum { background:#0a7a3d; color:#fff; }
+  .spin { display:none; width:12px; height:12px; border:2px solid #f4b400; border-top-color:transparent; border-radius:50%;
+    animation:ro 1s linear infinite; margin-left:auto; }
+  @keyframes ro { to{ transform:rotate(360deg);} }
+  .passo-a.rodando .spin { display:block; }
+  .cert-row { margin:10px 0; font-size:10px; }
+  .bt-iniciar { width:100%; margin-top:6px; background:linear-gradient(180deg,#2f6fce,#245ba9); color:#fff; border:1px solid #1c4c8f;
+    border-radius:3px; padding:7px; font-size:11px; font-weight:bold; font-family:Verdana; cursor:pointer; }
+  .bt-finalizar { width:100%; margin-top:8px; }
+
+  /* painel do tour (4 botões) */
+  .p-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+  .p-step { border:1px solid #e2e8f0; border-radius:10px; padding:9px 4px; text-align:center; background:#fff; cursor:pointer;
+    transition:all .15s; font-family:inherit; }
+  .p-step:hover { border-color:#0f766e; transform:translateY(-1px); }
+  .p-step .n { display:block; font-family:var(--mono); font-weight:700; font-size:14px; color:#0f766e; }
+  .p-step .l { font-size:8.5px; color:#64748b; }
+  .p-step.done { background:#f0fdfa; border-color:#5eead4; }
+  .p-step.done .n::after { content:" ✓"; color:#059669; }
+  .p-step.puls { animation:halo 1s infinite; }
+  .p-cpf { border:1px solid #e2e8f0; background:#f8fafc; border-radius:8px; padding:8px 10px; font-family:var(--mono);
+    font-size:10.5px; color:#334155; display:flex; justify-content:space-between; margin-bottom:10px; }
+  .p-cpf .lock { color:#0f766e; }
+  .p-sel { width:100%; border:1px solid #e2e8f0; border-radius:8px; padding:8px; font-size:11px; color:#334155; background:#fff; margin-bottom:8px; font-family:inherit; }
+
+  /* ============ overlay final ============ */
+  #fim { display:none; position:fixed; inset:0; z-index:80; background:rgba(6,14,19,.88); backdrop-filter:blur(8px);
+    align-items:center; justify-content:center; padding:20px; }
+  .fim-card { background:linear-gradient(180deg,#0e1e28,#0a1720); border:1px solid rgba(45,212,191,.4); border-radius:22px;
+    max-width:560px; width:100%; padding:40px 36px; text-align:center; color:#e7f0ee;
+    box-shadow:0 0 80px -14px rgba(20,184,166,.5); }
+  .fim-card .ok { width:74px; height:74px; margin:0 auto 18px; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; font-size:34px; background:rgba(45,212,191,.12); border:1px solid rgba(45,212,191,.5); }
+  .fim-card h2 { font-family:'Fraunces',serif; font-size:27px; font-weight:600; }
+  .fim-card h2 em { font-style:italic; color:var(--teal2); }
+  .fim-card p { color:#8fa8a3; font-size:14.5px; margin:12px 0 6px; }
+  .fim-nums { display:flex; gap:10px; justify-content:center; margin:22px 0; flex-wrap:wrap; }
+  .fim-num { border:1px solid rgba(148,163,184,.15); border-radius:14px; padding:12px 14px; min-width:118px; }
+  .fim-num .v { font-family:'Fraunces',serif; font-size:28px; color:var(--teal2); }
+  .fim-num.voce .v { color:var(--gold); }
+  .fim-num .k { font-size:10.5px; color:#64807b; margin-top:2px; }
+  .fim-bt { display:block; margin-top:8px; background:linear-gradient(135deg,var(--teal2),var(--teal-deep)); color:#03110e;
+    text-decoration:none; font-weight:700; font-size:16px; padding:15px; border-radius:12px;
+    box-shadow:0 0 0 1px rgba(45,212,191,.4), 0 16px 40px -12px rgba(20,184,166,.6); }
+  .fim-links { margin-top:14px; display:flex; gap:18px; justify-content:center; font-size:12.5px; }
+  .fim-links span, .fim-links a { color:#8fa8a3; cursor:pointer; text-decoration:underline; }
+
+  /* CTA fixo do modo explorar */
+  .cta-explorar { max-width:1280px; margin:0 auto 60px; padding:0 14px; }
+  .cta-in { border:1px solid rgba(45,212,191,.35); background:linear-gradient(180deg,rgba(20,184,166,.1),rgba(20,184,166,.02));
+    border-radius:18px; padding:26px 28px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+  .cta-in h3 { font-family:'Fraunces',serif; font-size:21px; font-weight:600; }
+  .cta-in h3 em { font-style:italic; color:var(--teal2); }
+  .cta-in p { color:var(--mut); font-size:13.5px; margin-top:4px; }
+  .cta-in .bt-sair { margin-left:auto; font-size:14px; padding:13px 24px; }
+  @media (prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
+</style>
+</head>
+<body>
+
+<div class="topo-demo"><div class="in">
+  <b class="marca">⬩ Auto-Ficha <i>PRO</i></b>
+  <span class="tag-demo">🎭 DEMONSTRAÇÃO — dados 100% fictícios</span>
+  <div class="mtabs">
+    <button class="mtab on" data-m="ficha">🩺 A Ficha ao vivo</button>
+    <button class="mtab" data-m="tour">🎬 Tour do plantão</button>
+  </div>
+  <span class="placar">
+    <span class="vc">seus cliques: <b id="c-voce">0</b></span>
+    <span>ações do robô: <b id="c-robo">0</b></span>
+    <span>caracteres escritos por você: <b>0</b> · pela ferramenta: <b id="c-chars">0</b></span>
+  </span>
+  <a class="bt-sair" href="venda.html#preco">Assinar — R$ 59,90/mês</a>
+</div></div>
+
+<!-- ================================================================
+     MODO A — A FICHA CLÍNICA AO VIVO (explorar a inteligência)
+     ================================================================ -->
+<div class="modo on" id="modo-ficha">
+  <div class="abre">
+    <h1>Esta é a Ficha Clínica. <em>Você comanda, ela se escreve.</em></h1>
+    <p>Use o painel <b>Auto-Ficha</b> (a réplica ao lado) como no plantão: escolha Homem ou Mulher, marque as
+    condições que o trabalhador referir e clique num tipo de exame. A função? <b>Ela lê direto da ficha</b> —
+    você não digita nada. Aí mexa à vontade — cada clique <b>reescreve a ficha na sua frente</b>: o REFERE ganha
+    tópicos, o "Nega…" contraditório some, o prontuário se marca sozinho.
+    <b>O texto é o ponto de partida. Você é o ponto final.</b></p>
+  </div>
+
+  <div class="palco">
+    <!-- ================== JANELA SOC · FICHA CLÍNICA ================== -->
+    <div class="janela">
+      <div class="jbar">
+        <span class="jdot" style="background:#ff5f57"></span><span class="jdot" style="background:#febc2e"></span><span class="jdot" style="background:#28c840"></span>
+        <span class="jurl">sistema.soc-demo.exemplo/WebSoc — ambiente fictício de treinamento</span>
+      </div>
+      <div class="soc">
+        <div class="soc-topo"><span class="brand">SOC*</span> <span>[cad009i] · 229 - Ficha Clínica</span>
+          <span class="emp">Empresa: 000001 - CLINIMED DEMONSTRAÇÕES LTDA</span></div>
+        <div class="soc-menu">
+          <a class="aqui">Ficha Clínica</a><a>Pedido de Exame</a><a>Resultado de Exames</a><a>ASO</a>
+        </div>
+        <div class="soc-corpo">
+          <div class="fx-info">
+            <span>Funcionário: <b id="fx-nome">4836 - CARLOS EXEMPLO DA SILVA</b></span>
+            <span>Empresa: <b>METALÚRGICA FICTÍCIA S/A</b></span>
+            <span>Função: <input type="text" id="fx-cargo" list="px-cargos" value="Auxiliar de Produção" style="width:170px"></span>
+            <datalist id="px-cargos"></datalist>
+            <span class="rot">(dados fictícios — o Auto-Ficha lê a função DAQUI, você não digita nada no painel; troque pra testar o EPI)</span>
+          </div>
+
+          <div class="fx-campo">
+            <div class="lab">Anamnese</div>
+            <input type="text" id="fx-anamnese" size="30" readonly>
+          </div>
+
+          <div class="fx-campo">
+            <div class="lab">Sinais vitais <span class="rot">— sorteados na normalidade, PA sempre coerente (só se o campo estiver vazio)</span></div>
+            <div class="vit-row">
+              <label>Temp (°C) <input type="text" id="fx-temp" readonly></label>
+              <label>FR (irpm) <input type="text" id="fx-fr" readonly></label>
+              <label>PA máx <input type="text" id="fx-pamax" readonly></label>
+              <label>PA mín <input type="text" id="fx-pamin" readonly></label>
+              <label>FC (bpm) <input type="text" id="fx-fc" readonly></label>
+            </div>
+          </div>
+
+          <div class="fx-campo">
+            <div class="lab">Texto Livre — Exame físico <span class="rot">(flexionado por sexo)</span></div>
+            <details class="fx-det" id="fx-fisico-det">
+              <summary>ver o exame físico completo, por sistemas</summary>
+              <div class="autotxt" id="fx-fisico"></div>
+            </details>
+          </div>
+
+          <div class="fx-campo">
+            <div class="lab">Texto Livre — Ficha Clínica <span class="rot">(REFERE + negativas — o coração da blindagem)</span></div>
+            <div class="fxstar">
+              <div class="fx-vazio" id="fx-vazio">A ficha está vazia.<br><b>Monte no painel Auto-Ficha ao lado e clique num tipo de exame.</b></div>
+              <div id="fx-conteudo" style="display:none">
+                <div class="refere-hd" id="fx-referehd" style="display:none">*COLABORADOR REFERE:</div>
+                <div id="fx-refere"></div>
+                <div class="nexo" id="fx-nexo" style="display:none"></div>
+                <div style="height:7px"></div>
+                <div id="fx-negas"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fx-campo" id="fx-questwrap">
+            <div class="lab">Questionário do prontuário <span class="rot">— marcado sozinho, coerente com o texto</span></div>
+            <div class="quest" id="fx-quest"></div>
+            <div class="radios4">
+              <span class="rr">24 · Uso de EPI: <b id="fx-r24">—</b></span>
+              <span class="rr">25 · Jornada/turnos: <b id="fx-r25">—</b></span>
+              <span class="rr">26 · Pausas: <b id="fx-r26">—</b></span>
+              <span class="rr">27 · Metas/prazos: <b id="fx-r27">—</b></span>
+            </div>
+          </div>
+
+          <div class="fx-campo" id="fx-mulherwrap" style="display:none">
+            <div class="lab">Para mulheres <span class="rot">(itens 17 e 18 + Observações — máx. 30 caracteres)</span></div>
+            <div class="quest" style="grid-template-columns:1fr">
+              <label><input type="checkbox" id="fx-i17" disabled> <span>17 · Ciclos menstruais regulares</span></label>
+            </div>
+            <div class="vit-row" style="background:#fff;border:1px solid #9aa5b5;border-top:none;padding:6px 9px">
+              <label>18 · Data da última menstruação <input type="text" id="fx-dum18" size="10" readonly style="width:78px"></label>
+              <label>Observações <input type="text" id="fx-obsdum" size="26" readonly style="width:190px"></label>
+            </div>
+          </div>
+
+          <div class="fx-campo" id="fx-epiwrap">
+            <div class="lab">EPI — Quais equipamentos <span class="rot">(por função, com a base legal — CLT art. 158 + NR-6)</span></div>
+            <div class="autotxt" id="fx-epi"></div>
+          </div>
+
+          <div class="fx-campo" id="fx-turnoswrap">
+            <div class="lab">Turnos — Descreva</div>
+            <div class="autotxt" id="fx-turnos"></div>
+          </div>
+
+          <!-- PRONTOMED: exame por 13 sistemas -->
+          <div class="fx-campo" id="fx-pm" style="display:none">
+            <div class="lab">PRONTOMED — Preenchimento Médico por sistemas <span class="rot">(13 quadros: "Normal" + Obs técnica pericial)</span></div>
+            <div class="pm-neg">
+              <span>Portador de deficiência: <b id="pm-def">—</b></span>
+              <span>Fumante: <b id="pm-fum">—</b></span>
+              <span>Bebidas alcoólicas: <b id="pm-alc">—</b></span>
+              <span>Medicamento em uso: <b id="pm-med">—</b></span>
+            </div>
+            <div class="pm-sist" id="pm-sist"></div>
+          </div>
+
+          <div class="fx-campo">
+            <div class="lab">Observações Médicas <span class="rot">(tipo do exame + termo de atestação)</span></div>
+            <div class="autotxt" id="fx-obsmed"></div>
+          </div>
+
+          <div class="fx-campo">
+            <div class="lab">Conclusão</div>
+            <div class="radios4" style="border:1px solid #9aa5b5">
+              <span class="rr" id="fx-concl">—</span>
+              <span class="rot">O parecer é sempre decisão sua — a ferramenta apenas propõe "Apto" para sua conferência.</span>
+            </div>
+          </div>
+
+          <span class="botaoT">Salvar</span>
+          <span class="rot" style="margin-left:8px">← o salvamento é <b>sempre seu</b>. Nada é enviado sozinho.</span>
+        </div>
+        <div class="soc-rodape">* Ambiente de DEMONSTRAÇÃO do Auto-Ficha PRO — reprodução ilustrativa e simplificada, sem qualquer vínculo com o software real. Nenhum dado é verdadeiro.</div>
+      </div>
+    </div>
+
+    <!-- ================== PAINEL AUTO-FICHA (réplica interativa) ================== -->
+    <div class="painel-wrap">
+      <div class="painel">
+        <div class="p-cab">
+          <span class="p-dot"></span>
+          <span class="p-tit"><b>Auto Ficha</b><small>AUTO-FICHA PRO · DEMONSTRAÇÃO</small></span>
+          <span class="p-timer">🔓 3h58</span>
+        </div>
+        <div class="p-corpo">
+          <div class="p-modelo" id="px-modelo" title="No produto, a detecção é automática — clique para forçar">
+            Ficha: <b id="px-modelo-v">SOC padrão</b> <span style="color:#94a3b8">· detectada sozinha — clique p/ alternar (PRONTOMED)</span>
+          </div>
+
+          <div class="p-sexo">
+            <button id="px-h" class="on">Homem</button>
+            <button id="px-m">Mulher</button>
+          </div>
+
+          <div class="p-box open" id="px-box-cond">
+            <div class="hd">＋ Condições referidas (opcional)</div>
+            <div class="bd" id="px-cond"></div>
+          </div>
+
+          <div class="p-box" id="px-box-mulher" style="display:none">
+            <div class="hd">＋ Saúde da mulher (menstruação)</div>
+            <div class="bd">
+              <label class="ck"><input type="checkbox" id="px-ciclos"> Ciclos menstruais regulares</label>
+              <label class="ck"><input type="checkbox" id="px-aco"> Uso de anticoncepcional (ACO)</label>
+              <label class="ck"><input type="checkbox" id="px-menop"> Menopausa</label>
+              <label class="ck"><input type="checkbox" id="px-hist"> Histerectomia</label>
+              <label class="ck"><input type="checkbox" id="px-amen"> Amenorreia</label>
+              <div class="p-sub" id="px-amensub" style="display:none">especificar: <input type="text" class="larga" id="px-amentxt" maxlength="30" placeholder="até 30 caracteres"></div>
+              <div class="p-sub">DUM: <input type="text" class="larga" id="px-dum" placeholder="dd/mm/aaaa" maxlength="10"></div>
+            </div>
+          </div>
+
+          <div class="p-box" id="px-box-hist">
+            <div class="hd">＋ Histórico laboral (opcional)</div>
+            <div class="bd">
+              <label class="ck"><input type="checkbox" id="px-acid"> 22 · Acidente de trabalho</label>
+              <label class="ck"><input type="checkbox" id="px-inss"> 23 · Afastamento pelo INSS</label>
+              <div class="p-sub" id="px-insssub" style="display:none">
+                ano <input type="text" id="px-inssano" maxlength="4">
+                motivo <input type="text" class="larga" id="px-inssmot">
+                dias <input type="text" id="px-inssdias" maxlength="4">
+              </div>
+            </div>
+          </div>
+
+          <div class="p-modelo" style="cursor:default" title="No produto real, a função vem da própria ficha aberta no SOC">
+            Função lida da ficha: <b id="px-cargo-lido">Auxiliar de Produção</b> <span style="color:#94a3b8">· automática — o EPI sai daqui</span>
+          </div>
+
+          <div class="p-eyebrow">Tipo de exame — monta a ficha inteira</div>
+          <div class="p-tipos" id="px-tipos">
+            <button data-t="admissional">Admissional</button>
+            <button data-t="periodico">Periódico</button>
+            <button data-t="retorno">Retorno ao Trabalho</button>
+            <button data-t="mudanca">Mudança de Função</button>
+            <button data-t="demissional">Demissional</button>
+          </div>
+
+          <button class="p-limpar" id="px-limpar">🗑 Limpar ficha</button>
+          <div class="p-toast" id="px-toast">Marque condições, digite o cargo e clique num <b>tipo de exame</b>. 👆</div>
+          <div class="p-stats">
+            <div class="p-stat"><div class="v" id="px-chars">0</div><div class="k">caracteres escritos p/ você</div></div>
+            <div class="p-stat"><div class="v" id="px-campos">0</div><div class="k">campos preenchidos</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="guia"><b>Dica:</b> marque <b>Pressão alta</b> e repare: o REFERE ganha o tópico, o
+      "Nega hipertensão" é riscado e some, e os itens <b>01 e 12</b> do prontuário se marcam — o 12 é
+      <b>deduzido</b> (HAS implica medicação contínua). Depois troque pra <b>Mulher</b>, teste a DUM e o
+      tabagismo — e troque a <b>Função na ficha do SOC</b> (ex.: Soldador) pra ver o EPI mudar. 🎮</div>
+    </div>
+  </div>
+
+  <div class="cta-explorar">
+    <div class="cta-in">
+      <div>
+        <h3>Gostou de mandar na ficha? <em>No plantão é assim.</em></h3>
+        <p>Agora veja o fluxo completo — resultado, ASO e assinatura digital — no <b style="color:var(--ink)">Tour do plantão</b>, ou leve pro seu SOC hoje.</p>
+      </div>
+      <a class="bt-sair" style="background:transparent;border:1px solid rgba(45,212,191,.4);color:var(--teal2)" href="#tour" id="ir-tour">🎬 Fazer o tour do plantão</a>
+      <a class="bt-sair" href="venda.html#preco">Assinar — R$ 59,90/mês</a>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     MODO B — TOUR DO PLANTÃO (sala → ficha → resultado → ASO → assinatura)
+     ================================================================ -->
+<div class="modo" id="modo-tour">
+  <div class="abre">
+    <h1>Um atendimento inteiro, <em>do jeito do plantão</em>.</h1>
+    <p>Sala de espera → Ficha Clínica → Resultado → ASO → <b>assinatura digital</b>. A demo te guia passo a passo;
+    os textos que aparecem são os <b>textos reais do produto</b>. Comece clicando no 🩺 do CARLOS, na fila.</p>
+  </div>
+
+  <div class="palco">
+    <!-- ================== JANELA SOC (tour) ================== -->
+    <div class="janela">
+      <div class="jbar">
+        <span class="jdot" style="background:#ff5f57"></span><span class="jdot" style="background:#febc2e"></span><span class="jdot" style="background:#28c840"></span>
+        <span class="jurl">sistema.soc-demo.exemplo/WebSoc — ambiente fictício de treinamento</span>
+      </div>
+      <div class="soc">
+        <div class="soc-topo"><span class="brand">SOC*</span> <span id="tr-titulo">[cad204i] · Salas de Atendimento</span>
+          <span class="emp">Empresa: 000001 - CLINIMED DEMONSTRAÇÕES LTDA</span></div>
+        <div class="soc-menu" id="tr-menu">
+          <a data-m="ficha">Ficha Clínica</a><a data-m="pedido">Pedido de Exame</a><a data-m="resultado">Resultado de Exames</a><a data-m="aso">ASO</a>
+        </div>
+
+        <!-- TELA: SALA -->
+        <div class="tela on" id="tr-sala"><div class="soc-corpo">
+          <h4>Sala de Atendimento — CLÍNICA DEMO · CENTRO <span class="rot">(atualizando automaticamente)</span></h4>
+          <table class="soc-t">
+            <tr><th>Hora</th><th>Funcionário</th><th>Empresa</th><th>Tipo</th><th>Exames</th><th>Status</th><th></th></tr>
+            <tr><td>08:00</td><td>MARIA FICTÍCIA DOS SANTOS</td><td>PADARIA EXEMPLO LTDA</td><td>Periódico</td>
+              <td><span class="bolinha b-vd"></span><span class="bolinha b-vd"></span></td><td>Atendida</td><td></td></tr>
+            <tr id="tr-linha-carlos"><td>08:10</td><td><b>CARLOS EXEMPLO DA SILVA</b></td><td>METALÚRGICA FICTÍCIA S/A</td><td>Admissional</td>
+              <td><span class="bolinha b-vd"></span><span class="bolinha b-am"></span></td><td>Aguardando clínico</td>
+              <td><span class="lapis" id="tr-abrir-carlos" title="Realizar atendimento">🩺</span></td></tr>
+            <tr><td>08:20</td><td>JOSÉ IMAGINÁRIO PEREIRA</td><td>TRANSPORTES DEMO ME</td><td>Periódico</td>
+              <td><span class="bolinha b-am"></span></td><td>Aguardando exames</td><td></td></tr>
+            <tr><td>08:25</td><td>ANA ILUSTRATIVA COSTA</td><td>PADARIA EXEMPLO LTDA</td><td>Demissional</td>
+              <td><span class="bolinha b-lr"></span></td><td>Ausente</td><td></td></tr>
+          </table>
+          <span class="rot">Filtros: Situação [Aguardando/Atendimento] · Especialidade [CLÍNICO GERAL] · Período [Todos] — a aba
+          <b>Guia SOC</b> do produto abre esta fila já filtrada, em qualquer clínica, com 1 clique.</span>
+        </div></div>
+
+        <!-- TELA: FICHA -->
+        <div class="tela" id="tr-ficha"><div class="soc-corpo">
+          <h4>Ficha Clínica — CARLOS EXEMPLO DA SILVA · Admissional · Auxiliar de Produção <span class="rot">(dados fictícios)</span></h4>
+          <table class="soc-t"><tr><th colspan="5">Sinais vitais</th></tr>
+            <tr>
+              <td>Temp (°C): <input type="text" id="tf-temp" size="4"></td>
+              <td>FR (irpm): <input type="text" id="tf-fr" size="3"></td>
+              <td>PA máx: <input type="text" id="tf-pamax" size="3"></td>
+              <td>PA mín: <input type="text" id="tf-pamin" size="3"></td>
+              <td>FC (bpm): <input type="text" id="tf-fc" size="3"></td>
+            </tr></table>
+          <table class="soc-t"><tr><th>Texto Livre — Exame físico (por sistemas)</th></tr>
+            <tr><td><textarea id="tf-fisico" rows="5" style="width:100%"></textarea></td></tr></table>
+          <table class="soc-t"><tr><th>Texto Livre — Ficha Clínica (negativas + blindagem)</th></tr>
+            <tr><td><textarea id="tf-refere" rows="6" style="width:100%"></textarea></td></tr></table>
+          <table class="soc-t"><tr><th>EPI — Quais equipamentos (por função + CLT art. 158/NR-6)</th></tr>
+            <tr><td><textarea id="tf-epi" rows="3" style="width:100%"></textarea></td></tr></table>
+          <table class="soc-t"><tr><th>Turnos — Descreva (admissional: blindagem NR-1 → dever do empregador)</th></tr>
+            <tr><td><textarea id="tf-turnos" rows="2" style="width:100%"></textarea></td></tr></table>
+          <span class="botaoT" id="tf-salvar">Salvar</span>
+          <span class="rot" style="margin-left:8px">← Confira tudo e salve você mesmo.</span>
+        </div></div>
+
+        <!-- TELA: RESULTADO -->
+        <div class="tela" id="tr-resultado"><div class="soc-corpo">
+          <h4>Resultado de Exames — CARLOS EXEMPLO DA SILVA <span class="rot">(dados fictícios)</span></h4>
+          <table class="soc-t">
+            <tr><th>Exame</th><th>Data</th><th>Resultado</th><th>Prestador</th><th></th></tr>
+            <tr>
+              <td>AVALIAÇÃO CLÍNICA</td>
+              <td><input type="text" id="tr-data" size="9" disabled></td>
+              <td><select id="tr-res" disabled><option></option><option>Normal</option><option>Alterado</option></select></td>
+              <td><select id="tr-prest" disabled><option></option><option>CLÍNICA DEMO · CENTRO</option><option>LAB FICTÍCIO</option></select></td>
+              <td><span class="lapis" id="tr-lapis" title="Editar">✏️</span> <span class="checkv" id="tr-check" style="display:none" title="Salvar">✅</span></td>
+            </tr>
+          </table>
+          <span class="rot">O botão ① acha o lápis certo em qualquer tela, marca Normal, escolhe o prestador e salva.
+          Trava clínica: com mais de um exame na tela, ele <b>não age</b> — avisa e deixa com você.</span>
+        </div></div>
+
+        <!-- TELA: ASO -->
+        <div class="tela" id="tr-aso"><div class="soc-corpo">
+          <h4>ASO — CARLOS EXEMPLO DA SILVA · Admissional <span class="rot">(dados fictícios)</span></h4>
+          <table class="soc-t">
+            <tr><th>Parecer</th><th>Validade</th><th>Emissor do ASO</th></tr>
+            <tr>
+              <td><select id="tr-parecer"><option></option><option>Apto para função</option><option>Apto com restrição</option><option>Inapto para função</option></select></td>
+              <td><select id="tr-val"><option></option><option>6 meses</option><option>1 ano</option><option>2 anos</option></select></td>
+              <td><select id="tr-emissor"><option></option><option>DRA. DEMONSTRAÇÃO EXEMPLO — CRM 00000-XX</option></select></td>
+            </tr>
+          </table>
+          <span class="botaoT" id="tr-asalvar">Salvar</span>
+          <span class="botaoT" id="tr-aimprimir" style="display:none">🖨️ Imprimir ASO (abre a assinatura digital)</span>
+          <div class="rot" style="margin-top:8px">O botão ③ escolhe o emissor <b>pelo médico da ficha</b>, marca Apto + validade
+          (inclusive nos pareceres especiais visíveis: altura, espaço confinado, eletricidade…), salva e abre a impressão.</div>
+        </div></div>
+
+        <!-- TELA: ASSINATURA -->
+        <div class="tela" id="tr-assin"><div class="soc-corpo">
+          <h4>Assinatura digital do documento <span class="rot">(documentoCustomizavel — dados fictícios)</span></h4>
+          <div class="ass-wrap">
+            <div class="ass-doc">
+              <h5>ATESTADO DE SAÚDE OCUPACIONAL — ASO</h5>
+              <div class="linha"><span>Funcionário:</span><b>CARLOS EXEMPLO DA SILVA</b></div>
+              <div class="linha"><span>Empresa:</span><b>METALÚRGICA FICTÍCIA S/A</b></div>
+              <div class="linha"><span>Função:</span><b>Auxiliar de Produção</b></div>
+              <div class="linha"><span>Exame:</span><b>Admissional — <span class="tr-hoje"></span></b></div>
+              <div class="linha"><span>Parecer:</span><b>APTO PARA FUNÇÃO</b></div>
+              <div class="linha"><span>Médico examinador:</span><b>DRA. DEMONSTRAÇÃO EXEMPLO · CRM 00000-XX</b></div>
+              <div class="assin-area" id="tr-assarea">assinatura digital pendente…
+                <div class="carimbo" id="tr-carimbo">✔ ASSINADO DIGITALMENTE<br>DRA. DEMONSTRAÇÃO EXEMPLO<br>ICP-Brasil (fictício) · <span class="tr-hoje"></span></div>
+              </div>
+            </div>
+            <div class="ass-modal">
+              <h6>Assinatura digital — SOCGED*</h6>
+              <div class="passo-a" id="tr-p1"><span class="pnum">1</span> Capturar biometria <span class="spin"></span></div>
+              <div class="passo-a" id="tr-p2"><span class="pnum">2</span> Gerar PDF no SOCGED <span class="spin"></span></div>
+              <div class="passo-a" id="tr-p3"><span class="pnum">3</span> Assinar PDF digitalmente <span class="spin"></span></div>
+              <div class="passo-a" id="tr-p4"><span class="pnum">4</span> Gerar arquivo assinado <span class="spin"></span></div>
+              <div class="cert-row">Certificado: <select id="tr-cert" disabled style="width:100%"><option></option><option>DEMONSTRACAO EXEMPLO:***001-91 (A3)</option></select></div>
+              <button class="bt-iniciar" id="tr-iniciar" disabled>Iniciar Assinatura</button>
+              <span class="botaoT bt-finalizar" id="tr-fin" style="display:none">Finalizar</span>
+            </div>
+          </div>
+          <span class="rot">A trava de identidade: o certificado é escolhido pelo <b>CPF travado na licença</b>. CPF não bate =
+          o robô <b>para e avisa</b> — nunca assina como outra pessoa.</span>
+        </div></div>
+
+        <div class="soc-rodape">* Ambiente de DEMONSTRAÇÃO do Auto-Ficha PRO — reprodução ilustrativa e simplificada, sem qualquer vínculo com o software real. Nenhum dado é verdadeiro.</div>
+      </div>
+    </div>
+
+    <!-- ================== PAINEL (tour) ================== -->
+    <div class="painel-wrap">
+      <div class="painel">
+        <div class="p-cab">
+          <span class="p-dot"></span>
+          <span class="p-tit"><b>Auto Ficha</b><small>AUTO-FICHA PRO · DEMONSTRAÇÃO</small></span>
+          <span class="p-timer">🔓 3h58</span>
+        </div>
+        <div class="p-corpo">
+          <div class="p-eyebrow">Fluxo de liberação</div>
+          <select class="p-sel" disabled><option>CLÍNICA DEMO · CENTRO</option></select>
+          <div class="p-cpf"><span>CPF do assinante</span><span>•••.•••.001-91 <span class="lock">🔒</span></span></div>
+          <div class="p-steps">
+            <button class="p-step" id="tb1"><span class="n">1</span><span class="l">Resultado</span></button>
+            <button class="p-step" id="tb2"><span class="n">2</span><span class="l">Ficha</span></button>
+            <button class="p-step" id="tb3"><span class="n">3</span><span class="l">ASO</span></button>
+            <button class="p-step" id="tb4"><span class="n">4</span><span class="l">Assinatura</span></button>
+          </div>
+          <div class="p-toast" id="tr-toast" style="margin-top:11px">Clique em 🩺 na fila pra abrir o atendimento do CARLOS.</div>
+          <div class="banner-lar" id="tr-banner">👉 Agora é com você, doutor(a): clique no botão azul <b>"Iniciar Assinatura"</b> — o
+          certificado é seu, o gesto é seu. O robô detecta pelos efeitos e termina o resto.</div>
+        </div>
+      </div>
+      <div class="guia"><b>Como no plantão real:</b> o painel flutua sobre o SOC. Siga a demo — ela pisca o próximo passo. 👇</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================== OVERLAY FINAL ================== -->
+<div id="fim">
+  <div class="fim-card">
+    <div class="ok">🖊️</div>
+    <h2>ASO assinado. <em>Assim.</em></h2>
+    <p>Ficha completa, resultado liberado, ASO emitido e assinatura digital concluída — num ambiente 100% fictício,
+    com o fluxo e os textos idênticos aos do plantão.</p>
+    <div class="fim-nums">
+      <div class="fim-num voce"><div class="v" id="fim-voce">5</div><div class="k">cliques SEUS</div></div>
+      <div class="fim-num"><div class="v" id="fim-robo">28</div><div class="k">ações do robô</div></div>
+      <div class="fim-num"><div class="v" id="fim-chars">0</div><div class="k">caracteres escritos p/ você</div></div>
+      <div class="fim-num"><div class="v">×30</div><div class="k">atendimentos por turno</div></div>
+    </div>
+    <a class="fim-bt" href="https://mpago.la/314iDci" target="_blank" rel="noopener">Quero isso no meu SOC — R$ 59,90/mês</a>
+    <div class="fim-links">
+      <span onclick="location.reload()">↻ refazer</span>
+      <span id="fim-explorar">🩺 explorar a Ficha ao vivo</span>
+      <a href="venda.html">← voltar à página do produto</a>
+    </div>
+  </div>
+</div>
+
+<script src="motor-demo.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var M = window.AFMOTOR;
+  var fmt = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "."); };
+
+  /* ================= placar global ================= */
+  var voce = 0, robo = 0;
+  function cVoce() { voce++; $("c-voce").textContent = voce; }
+  function cRobo(n) { robo += (n || 1); $("c-robo").textContent = robo; }
+  function cChars(n) { $("c-chars").textContent = fmt(n); }
+
+  /* ================= troca de modo ================= */
+  function modo(m) {
+    document.querySelectorAll(".mtab").forEach(function (b) { b.classList.toggle("on", b.getAttribute("data-m") === m); });
+    $("modo-ficha").classList.toggle("on", m === "ficha");
+    $("modo-tour").classList.toggle("on", m === "tour");
+    try { history.replaceState(null, "", "#" + m); } catch (e) {}
+    window.scrollTo({ top: 0 });
+  }
+  document.querySelectorAll(".mtab").forEach(function (b) {
+    b.addEventListener("click", function () { modo(b.getAttribute("data-m")); });
+  });
+  $("ir-tour").addEventListener("click", function (e) { e.preventDefault(); modo("tour"); });
+  $("fim-explorar").addEventListener("click", function () { $("fim").style.display = "none"; modo("ficha"); });
+  if (location.hash === "#tour") modo("tour");
+
+  /* ============================================================
+     MODO A — FICHA AO VIVO
+     ============================================================ */
+  var st = { sexo: "homem", tipo: null, modelo: "soc", ids: [], extras: { outros: [{ texto: "", medica: false }], mulher: {} }, cargo: "" };
+  var prevReferKeys = [], prevCut = {}, prevMarcados = {};
+
+  /* ---- monta a lista de condições do painel ---- */
+  var PAINEL_CONDS = ["has","coracao","diabetes","tuberculose","resfriados","asma","audicao","visao","coluna",
+                      "internacoes","cirurgias","limitacao","outras","tabagismo","etilismo","ansiedade"];
+  (function () {
+    var html = "";
+    PAINEL_CONDS.forEach(function (id) {
+      var c = M.TEXTOS.condicoes[id];
+      html += '<label class="ck"><input type="checkbox" class="pxc" data-id="' + id + '"> ' + c.label + '</label>';
+      if (id === "tabagismo") html += '<div class="p-sub" id="px-tabsub" style="display:none">cigarros/dia <input type="number" id="px-cig" min="1"> há <input type="number" id="px-anos" min="1"> anos <span style="color:#0f766e;font-weight:700" id="px-carga"></span></div>';
+      if (id === "ansiedade") html += '<div class="p-sub" id="px-ansisub" style="display:none"><label class="ck" style="padding:0"><input type="checkbox" id="px-ansimed"> usa medicação</label></div>';
+    });
+    html += '<div class="p-eyebrow" style="margin-top:8px">Outros (especificar)</div>' +
+            '<div id="px-outros"></div><button class="p-add" id="px-oadd">＋ adicionar outra condição</button>';
+    $("px-cond").innerHTML = html;
+    renderOutros();
+  })();
+  function renderOutros() {
+    var box = $("px-outros"); box.innerHTML = "";
+    st.extras.outros.forEach(function (o, i) {
+      var div = document.createElement("div"); div.className = "p-sub"; div.style.margin = "2px 0 6px 0";
+      div.innerHTML = '<input type="text" class="larga px-otx" data-i="' + i + '" maxlength="60" placeholder="ex.: hipotireoidismo" value="' +
+        (o.texto || "").replace(/"/g, "&quot;") + '"> <label class="ck" style="padding:0"><input type="checkbox" class="px-omed" data-i="' + i + '"' +
+        (o.medica ? " checked" : "") + '> usa medicação</label>';
+      box.appendChild(div);
+    });
+  }
+
+  /* ---- datalist de cargos ---- */
+  $("px-cargos").innerHTML = M.CARGOS_SUGERIDOS.map(function (c) { return "<option value=\"" + c + "\">"; }).join("");
+
+  /* ---- questionário do prontuário (telas SOC) ---- */
+  var QUEST_ITENS = [["01","Pressão Alta / H.A.S"],["02","Doenças do Coração"],["03","Diabetes"],["04","Tuberculose"],
+    ["05","Resfriados / sinusite"],["06","Asma / Bronquite / Rinite"],["07","Problemas na audição"],["08","Problemas na visão"],
+    ["09","Doenças da coluna / dores nas costas"],["10","Internações"],["11","Cirurgias"],["12","Uso regular de medicamentos"],
+    ["13","Deficiência física"],["14","Doenças relevantes não mencionadas"],["15","Tabagismo"],["16","Etilismo"],
+    ["21","Doenças Ocupacionais"],["22","Acidentes de trabalho"],["23","Afastamento pelo INSS"]];
+  (function () {
+    var html = "";
+    QUEST_ITENS.forEach(function (it) {
+      html += '<label id="fxq-' + it[0] + '"><input type="checkbox" disabled> <span>' + it[0] + ' · ' + it[1] +
+              '</span><span class="dedz">deduzido</span></label>';
+    });
+    $("fx-quest").innerHTML = html;
+  })();
+
+  /* ---- negas (18 linhas fixas, riscadas por classe) ---- */
+  var NEGAS = M.TEXTOS.nega.split("\n");
+  (function () {
+    var html = "";
+    NEGAS.forEach(function (n, i) { html += '<div class="ng" id="fxn-' + i + '"><span class="tx">' + n + "</span></div>"; });
+    $("fx-negas").innerHTML = html;
+  })();
+
+  /* ---- PRONTOMED: 13 sistemas ---- */
+  (function () {
+    var html = "";
+    M.SISTEMAS.forEach(function (s) {
+      html += '<div class="pm-row" id="pms-' + s[0] + '"><span class="nm">' + s[1] + '</span> — <span class="ok">☑ Normal</span> · ' +
+        '<details><summary>ver a Obs técnica</summary><div class="obs">' + M.TEXTOS.sistemas[s[0]] + "</div></details></div>";
+    });
+    $("pm-sist").innerHTML = html;
+  })();
+
+  function setTxt(id, v) {
+    var el = $(id);
+    var novo = v == null ? "" : String(v);
+    var mudou = (el.tagName === "INPUT" ? el.value : el.textContent) !== novo;
+    if (el.tagName === "INPUT") el.value = novo; else el.textContent = novo;
+    if (mudou && novo) { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+    return mudou && novo ? 1 : 0;
+  }
+
+  /* ---- estado do painel → render da ficha ---- */
+  function lerPainel() {
+    st.ids = [];
+    document.querySelectorAll(".pxc").forEach(function (c) { if (c.checked) st.ids.push(c.getAttribute("data-id")); });
+    if ($("px-acid").checked) st.ids.push("acidente");
+    if ($("px-inss").checked) st.ids.push("inss");
+    st.extras.fumoCig = $("px-cig") ? $("px-cig").value : "";
+    st.extras.fumoAnos = $("px-anos") ? $("px-anos").value : "";
+    st.extras.ansiedadeMed = $("px-ansimed") ? $("px-ansimed").checked : false;
+    st.extras.inssAno = $("px-inssano").value; st.extras.inssMotivo = $("px-inssmot").value; st.extras.inssDias = $("px-inssdias").value;
+    st.extras.mulher = {
+      ciclosReg: $("px-ciclos").checked, menopausa: $("px-menop").checked, histerectomia: $("px-hist").checked,
+      aco: $("px-aco").checked, amenorreia: $("px-amen").checked, amenorreiaTxt: $("px-amentxt").value, dum: $("px-dum").value
+    };
+    st.cargo = $("fx-cargo").value;
+    $("px-cargo-lido").textContent = st.cargo || "—";
+    /* subcaixas visíveis */
+    $("px-tabsub").style.display = st.ids.indexOf("tabagismo") !== -1 ? "flex" : "none";
+    $("px-ansisub").style.display = st.ids.indexOf("ansiedade") !== -1 ? "flex" : "none";
+    $("px-insssub").style.display = $("px-inss").checked ? "flex" : "none";
+    $("px-amensub").style.display = $("px-amen").checked ? "flex" : "none";
+    /* carga ao vivo na sub-caixa */
+    var cg = parseFloat(String(st.extras.fumoCig).replace(",", ".")), an = parseFloat(String(st.extras.fumoAnos).replace(",", "."));
+    $("px-carga").textContent = (cg > 0 && an > 0) ? "= " + (Math.round((cg / 20) * an * 10) / 10).toLocaleString("pt-BR") + " anos-maço" : "";
+  }
+
+  function render() {
+    if (!st.tipo) {
+      $("px-tipos").classList.add("puls");
+      $("px-toast").innerHTML = "Agora clique num <b>tipo de exame</b> pra ver a ficha se escrever. 👇";
+      return;
+    }
+    var A = M.analisar({ sexo: st.sexo, tipo: st.tipo, ids: st.ids.filter(function (i) { return i !== "acidente" || true; }), extras: st.extras, cargo: st.cargo });
+    var acoes = 0;
+
+    /* cabeçalho fictício */
+    $("fx-nome").textContent = st.sexo === "mulher" ? "4837 - CARLA EXEMPLO DA SILVA" : "4836 - CARLOS EXEMPLO DA SILVA";
+    $("fx-referehd").textContent = "*" + (st.sexo === "mulher" ? "COLABORADORA" : "COLABORADOR") + " REFERE:";
+
+    /* campos simples */
+    acoes += setTxt("fx-anamnese", A.palavra);
+    acoes += setTxt("fx-temp", A.vitais.temperatura); acoes += setTxt("fx-fr", A.vitais.fr);
+    acoes += setTxt("fx-pamax", A.vitais.paSistolica); acoes += setTxt("fx-pamin", A.vitais.paDiastolica);
+    acoes += setTxt("fx-fc", A.vitais.fc);
+    acoes += setTxt("fx-fisico", A.exameFisico);
+    acoes += setTxt("fx-obsmed", A.observacoesMedicas);
+    acoes += setTxt("fx-epi", A.epi.quais);
+    acoes += setTxt("fx-turnos", A.epi.turnoDescreva);
+    $("fx-r24").textContent = st.tipo === "demissional" ? "☑ Sim" : "☑ Sim"; $("fx-r25").textContent = "☑ Sim";
+    $("fx-r26").textContent = "☑ Sim"; $("fx-r27").textContent = "☐ Não";
+    $("fx-concl").innerHTML = "☑ <b>Apto para a função</b> · ☐ Apto c/ restrições · ☐ Inapto · ☐ Inconclusivo";
+
+    /* mostra o conteúdo */
+    $("fx-vazio").style.display = "none"; $("fx-conteudo").style.display = "block";
+
+    /* REFERE — anima os tópicos novos */
+    var wrap = $("fx-refere"); wrap.innerHTML = "";
+    var keys = [];
+    A.refere.forEach(function (r, i) {
+      keys.push(r.key);
+      var d = document.createElement("div");
+      d.className = "rl" + (prevReferKeys.indexOf(r.key) === -1 ? " add" : "");
+      d.textContent = (i + 1) + ") " + r.texto;
+      wrap.appendChild(d);
+      if (prevReferKeys.indexOf(r.key) === -1) acoes++;
+    });
+    $("fx-referehd").style.display = A.refere.length ? "block" : "none";
+    prevReferKeys = keys;
+
+    /* nexo */
+    var nx = $("fx-nexo");
+    if (A.nexo) {
+      if (nx.style.display === "none" || nx.textContent !== A.nexo) { nx.classList.remove("add"); void nx.offsetWidth; nx.classList.add("add"); acoes++; }
+      nx.textContent = A.nexo; nx.style.display = "block";
+    } else { nx.style.display = "none"; nx.textContent = ""; }
+
+    /* negas — risca e recolhe as contraditórias */
+    A.negas.forEach(function (n, i) {
+      var el = $("fxn-" + i);
+      var estava = !!prevCut[i];
+      el.classList.toggle("cut", n.removida);
+      if (n.removida && !estava) acoes++;
+      prevCut[i] = n.removida;
+    });
+
+    /* prontuário — marca coerente + badge "deduzido" */
+    var marcados = {};
+    A.idsFicha.forEach(function (id) { var n = M.ITEM_NUM[id]; if (n) marcados[n] = id; });
+    QUEST_ITENS.forEach(function (it) {
+      var num = it[0], lab = $("fxq-" + num), on = !!marcados[num];
+      lab.querySelector("input").checked = on;
+      var deduzido = on && (num === "12" && st.ids.indexOf("medicamentos") === -1) ||
+                     (num === "14" && st.ids.indexOf("outras") === -1 && on);
+      lab.classList.toggle("dz", !!deduzido);
+      if (on && !prevMarcados[num]) { lab.classList.remove("mark"); void lab.offsetWidth; lab.classList.add("mark"); acoes++; }
+      lab.classList.toggle("markon", on);
+    });
+    prevMarcados = marcados;
+
+    /* mulher */
+    var ehM = st.sexo === "mulher";
+    $("fx-mulherwrap").style.display = ehM ? "block" : "none";
+    $("px-box-mulher").style.display = ehM ? "block" : "none";
+    if (ehM) {
+      $("fx-i17").checked = !!(A.mulher && A.mulher.ciclosReg);
+      acoes += setTxt("fx-dum18", A.mulher && A.mulher.dum ? A.mulher.dum : "");
+      acoes += setTxt("fx-obsdum", A.obsDum);
+    }
+
+    /* EPI/turnos ocultos no demissional? não — o campo recebe a palavra do tipo (fiel) */
+
+    /* modelo */
+    var pm = st.modelo === "prontomed";
+    $("fx-pm").style.display = pm ? "block" : "none";
+    $("fx-questwrap").style.display = pm ? "none" : "block";
+    $("fx-epiwrap").style.display = pm ? "none" : "block";
+    $("fx-turnoswrap").style.display = pm ? "none" : "block";
+    if (pm) {
+      $("pm-def").textContent = st.ids.indexOf("limitacao") !== -1 ? "— (referida: não marca 'Não')" : "☑ Não";
+      $("pm-fum").textContent = st.ids.indexOf("tabagismo") !== -1 ? "— (referido: não marca 'Não')" : "☑ Não";
+      $("pm-alc").textContent = st.ids.indexOf("etilismo") !== -1 ? "— (referido: não marca 'Não')" : "☑ Não";
+      $("pm-med").textContent = A.usaMedicacao ? "— (em uso — descrito no REFERE)" : "\"" + M.TEXTOS.antecedentesMedicacao + "\"";
+      acoes += 14; /* 13 sistemas + datas */
+    }
+
+    /* placar */
+    cRobo(Math.max(acoes, 1));
+    cChars(A.totalChars);
+    $("px-chars").textContent = fmt(A.totalChars);
+    $("px-campos").textContent = String(12 + A.idsFicha.length + (ehM ? 3 : 0) + (pm ? 14 : 0));
+    $("px-tipos").classList.remove("puls");
+
+    var dicas = [
+      "Repare no bloco \"Nega…\": a ficha <b>nunca afirma e nega</b> a mesma coisa.",
+      "O item <b>12</b> se marca sozinho quando a condição implica medicação — deduzido.",
+      "Troque o <b>tipo de exame</b>: o fecho de não-nexo só entra em Periódico, Demissional e Mudança.",
+      "Troque a <b>Função na ficha</b> (ex.: Soldador) — o EPI muda sozinho, com a base legal (CLT art. 158).",
+      "No <b>Admissional</b>, os turnos registram a blindagem NR-1: informar riscos é dever do empregador.",
+      "Confira e salve <b>você mesmo</b> — nada é enviado sozinho."
+    ];
+    $("px-toast").innerHTML = "✅ Ficha atualizada ao vivo. " + dicas[Math.floor(Math.random() * dicas.length)];
+  }
+
+  function tocar() { lerPainel(); render(); }
+
+  /* ---- listeners do painel ---- */
+  document.querySelectorAll("#px-cond, #px-box-mulher .bd, #px-box-hist .bd").forEach(function (area) {
+    area.addEventListener("change", function (e) { cVoce(); tocar(); });
+    area.addEventListener("input", function (e) {
+      if (e.target && (e.target.id === "px-cig" || e.target.id === "px-anos" || e.target.id === "px-amentxt" ||
+          e.target.id === "px-dum" || e.target.classList.contains("px-otx") ||
+          e.target.id === "px-inssano" || e.target.id === "px-inssmot" || e.target.id === "px-inssdias")) {
+        if (e.target.classList.contains("px-otx")) st.extras.outros[+e.target.getAttribute("data-i")].texto = e.target.value;
+        tocar();
+      }
+    });
+  });
+  $("px-cond").addEventListener("change", function (e) {
+    if (e.target && e.target.classList.contains("px-omed")) st.extras.outros[+e.target.getAttribute("data-i")].medica = e.target.checked;
+  });
+  $("px-cond").addEventListener("click", function (e) {
+    if (e.target && e.target.id === "px-oadd") { st.extras.outros.push({ texto: "", medica: false }); renderOutros(); cVoce(); }
+  });
+  $("fx-cargo").addEventListener("input", function () { tocar(); });
+  document.querySelectorAll(".p-box > .hd").forEach(function (hd) {
+    hd.addEventListener("click", function () { hd.parentElement.classList.toggle("open"); });
+  });
+  $("px-h").addEventListener("click", function () { st.sexo = "homem"; $("px-h").classList.add("on"); $("px-m").classList.remove("on"); cVoce(); tocar(); });
+  $("px-m").addEventListener("click", function () { st.sexo = "mulher"; $("px-m").classList.add("on"); $("px-h").classList.remove("on"); $("px-box-mulher").style.display = "block"; cVoce(); tocar(); });
+  document.querySelectorAll(".p-tipos button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      st.tipo = b.getAttribute("data-t");
+      document.querySelectorAll(".p-tipos button").forEach(function (x) { x.classList.toggle("on", x === b); });
+      cVoce(); tocar();
+    });
+  });
+  $("px-modelo").addEventListener("click", function () {
+    st.modelo = st.modelo === "soc" ? "prontomed" : "soc";
+    $("px-modelo-v").textContent = st.modelo === "soc" ? "SOC padrão" : "PRONTOMED";
+    cVoce(); if (st.tipo) render();
+  });
+  $("px-limpar").addEventListener("click", function () {
+    cVoce();
+    document.querySelectorAll("#px-cond input, #px-box-mulher input, #px-box-hist input").forEach(function (i) {
+      if (i.type === "checkbox") i.checked = false; else i.value = "";
+    });
+    st.extras.outros = [{ texto: "", medica: false }]; renderOutros();
+    st.tipo = null;
+    document.querySelectorAll(".p-tipos button").forEach(function (x) { x.classList.remove("on"); });
+    prevReferKeys = []; prevCut = {}; prevMarcados = {};
+    $("fx-vazio").style.display = "flex"; $("fx-conteudo").style.display = "none";
+    ["fx-anamnese","fx-temp","fx-fr","fx-pamax","fx-pamin","fx-fc"].forEach(function (id) { $(id).value = ""; });
+    ["fx-fisico","fx-obsmed","fx-epi","fx-turnos"].forEach(function (id) { $(id).textContent = ""; });
+    $("fx-negas").querySelectorAll(".ng").forEach(function (n) { n.classList.remove("cut"); });
+    $("fx-quest").querySelectorAll("input").forEach(function (i) { i.checked = false; });
+    $("px-toast").innerHTML = "Ficha limpa. Monte de novo — o painel abre <b>zerado a cada atendimento</b>, como no produto.";
+    lerPainel();
+  });
+  lerPainel();
+
+  /* ============================================================
+     MODO B — TOUR DO PLANTÃO
+     ============================================================ */
+  var etapa = "sala";
+  var tChars = 0;
+  document.querySelectorAll(".tr-hoje").forEach(function (el) { el.textContent = M.hojeBR(); });
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function toastT(t) { $("tr-toast").innerHTML = t; }
+  function telaVai(id, titulo) {
+    document.querySelectorAll("#modo-tour .tela").forEach(function (t) { t.classList.remove("on"); });
+    $(id).classList.add("on");
+    $("tr-titulo").textContent = titulo;
+  }
+  function halo(el) { el.classList.add("halo"); return sleep(850).then(function () { el.classList.remove("halo"); }); }
+  function puls(id) {
+    ["tb1","tb2","tb3","tb4"].forEach(function (b) { $(b).classList.remove("puls"); });
+    if (id) $(id).classList.add("puls");
+  }
+  function digita(el, txt, cps) {
+    el.value = "";
+    var i = 0, passo = Math.max(1, Math.round((cps || 400) / 50));
+    return new Promise(function (res) {
+      var tm = setInterval(function () {
+        i += passo; el.value = txt.slice(0, i);
+        el.scrollTop = el.scrollHeight;
+        if (i >= txt.length) { clearInterval(tm); el.value = txt; tChars += txt.length; cChars(tChars); res(); }
+      }, 20);
+    });
+  }
+  function menuAqui(m) {
+    document.querySelectorAll("#tr-menu a").forEach(function (a) { a.classList.toggle("aqui", a.getAttribute("data-m") === m); });
+  }
+  function rotuloEtapa() {
+    return etapa === "sala" ? "na SALA — clique no 🩺 da fila" :
+      etapa === "ficha" ? "na FICHA — use o botão ②" :
+      etapa === "resultado" ? "no RESULTADO — use o botão ①" :
+      etapa === "aso" ? "no ASO — use o botão ③" :
+      etapa === "assinatura" ? "na ASSINATURA — use o botão ④" :
+      etapa === "iniciar" ? "esperando o SEU clique no Iniciar Assinatura" : "processando…";
+  }
+
+  /* etapa 0: sala */
+  $("tr-abrir-carlos").addEventListener("click", async function () {
+    if (etapa !== "sala") return;
+    cVoce(); etapa = "ficha";
+    await halo($("tr-linha-carlos"));
+    telaVai("tr-ficha", "[cad009i] · 229 - Ficha Clínica"); menuAqui("ficha");
+    toastT("Atendimento aberto. Agora o <b>botão ② Ficha</b> — o robô preenche com os textos REAIS do produto.");
+    puls("tb2");
+  });
+
+  /* botão 2: ficha (com o motor real — CARLOS, admissional, Auxiliar de Produção) */
+  $("tb2").addEventListener("click", async function () {
+    if (etapa !== "ficha") { toastT("Nessa demo, estamos " + rotuloEtapa() + "."); return; }
+    cVoce(); puls(null); etapa = "rodando";
+    var A = M.analisar({ sexo: "homem", tipo: "admissional", ids: [], extras: {}, cargo: "Auxiliar de Produção" });
+    toastT("🤖 Vitais sorteados na normalidade (PA sempre coerente), exame físico por sistemas, 18 negativas, EPI da função…");
+    $("tf-temp").value = A.vitais.temperatura; $("tf-fr").value = A.vitais.fr;
+    $("tf-pamax").value = A.vitais.paSistolica; $("tf-pamin").value = A.vitais.paDiastolica; $("tf-fc").value = A.vitais.fc;
+    cRobo(5); await halo($("tf-temp").parentElement);
+    await digita($("tf-fisico"), A.exameFisico, 900); cRobo();
+    await digita($("tf-refere"), A.fichaTexto, 700); cRobo();
+    await digita($("tf-epi"), A.epi.quais, 800); cRobo();
+    await digita($("tf-turnos"), A.epi.turnoDescreva, 700); cRobo();
+    await halo($("tf-salvar")); cRobo();
+    toastT("Ficha completa ✅ — <b>confira antes de salvar, sempre</b>. Agora o <b>botão ①</b> libera o resultado.");
+    etapa = "resultado"; puls("tb1");
+    await sleep(700);
+    telaVai("tr-resultado", "[cad012i] · 250 - Resultado de Exames"); menuAqui("resultado");
+  });
+
+  /* botão 1: resultado */
+  $("tb1").addEventListener("click", async function () {
+    if (etapa !== "resultado") { toastT("Nessa demo, estamos " + rotuloEtapa() + "."); return; }
+    cVoce(); puls(null); etapa = "rodando";
+    toastT("🤖 Achando o lápis certo, marcando Normal, prestador e salvando…");
+    await halo($("tr-lapis")); cRobo();
+    $("tr-data").disabled = $("tr-res").disabled = $("tr-prest").disabled = false;
+    $("tr-lapis").style.display = "none"; $("tr-check").style.display = "inline";
+    $("tr-data").value = M.hojeBR(); cRobo();
+    await sleep(250); $("tr-res").value = "Normal"; await halo($("tr-res")); cRobo();
+    await sleep(250); $("tr-prest").value = "CLÍNICA DEMO · CENTRO"; await halo($("tr-prest")); cRobo();
+    await halo($("tr-check")); cRobo();
+    $("tr-data").disabled = $("tr-res").disabled = $("tr-prest").disabled = true;
+    $("tb1").classList.add("done"); $("tb2").classList.add("done");
+    toastT("Resultado liberado ✅. Agora o <b>botão ③</b> emite o ASO e abre a assinatura.");
+    etapa = "aso"; puls("tb3");
+    await sleep(700);
+    telaVai("tr-aso", "[cad017i] · ASO"); menuAqui("aso");
+  });
+
+  /* botão 3: ASO */
+  $("tb3").addEventListener("click", async function () {
+    if (etapa !== "aso") { toastT("Nessa demo, estamos " + rotuloEtapa() + "."); return; }
+    cVoce(); puls(null); etapa = "rodando";
+    toastT("🤖 Emissor = o médico da ficha, Apto, validade 1 ano (e nos pareceres especiais visíveis)… salvando e abrindo a impressão.");
+    $("tr-parecer").value = "Apto para função"; await halo($("tr-parecer")); cRobo();
+    $("tr-val").value = "1 ano"; await halo($("tr-val")); cRobo();
+    $("tr-emissor").value = "DRA. DEMONSTRAÇÃO EXEMPLO — CRM 00000-XX"; await halo($("tr-emissor")); cRobo();
+    await halo($("tr-asalvar")); cRobo();
+    $("tr-aimprimir").style.display = "inline";
+    await halo($("tr-aimprimir")); cRobo();
+    toastT("ASO salvo ✅ — abrindo a aba de assinatura… Agora o <b>botão ④</b>.");
+    etapa = "assinatura"; puls("tb4");
+    await sleep(800);
+    telaVai("tr-assin", "documentoCustomizavel · Assinatura digital"); menuAqui("");
+  });
+
+  /* botão 4: assinatura */
+  async function passo(id) {
+    var p = $(id); p.classList.add("rodando");
+    await sleep(850);
+    p.classList.remove("rodando"); p.classList.add("feito");
+  }
+  $("tb4").addEventListener("click", async function () {
+    if (etapa !== "assinatura") { toastT("Nessa demo, estamos " + rotuloEtapa() + "."); return; }
+    cVoce(); puls(null); etapa = "rodando";
+    toastT("🤖 Biometria → PDF no SOCGED → certificado pelo seu CPF… o robô prepara tudo.");
+    await passo("tr-p1"); cRobo();
+    await passo("tr-p2"); cRobo();
+    $("tr-cert").disabled = false; $("tr-cert").value = "DEMONSTRACAO EXEMPLO:***001-91 (A3)";
+    await halo($("tr-cert")); cRobo();
+    $("tr-iniciar").disabled = false;
+    $("tr-banner").style.display = "block";
+    $("tr-iniciar").classList.add("halo");
+    toastT("👉 <b>1 clique seu no \"Iniciar Assinatura\"</b> — o navegador exige o gesto humano. É a sua segurança jurídica: quem aciona o certificado é você.");
+    etapa = "iniciar";
+  });
+
+  /* o clique humano */
+  $("tr-iniciar").addEventListener("click", async function () {
+    if (etapa !== "iniciar") return;
+    cVoce(); etapa = "rodando";
+    this.classList.remove("halo"); this.disabled = true;
+    $("tr-banner").style.display = "none";
+    toastT("🤖 Detectei o seu clique <b>pelos efeitos na tela</b> (spinner sustentado, texto de sucesso) — assinando…");
+    await passo("tr-p3"); cRobo();
+    await passo("tr-p4"); cRobo();
+    $("tr-assarea").firstChild.textContent = "";
+    $("tr-carimbo").style.display = "block";
+    $("tr-fin").style.display = "inline-block";
+    await halo($("tr-fin")); cRobo();
+    await sleep(300); await halo($("tr-fin")); cRobo();
+    $("tb3").classList.add("done"); $("tb4").classList.add("done");
+    toastT("✅ ASO assinado digitalmente — Finalizar, Finalizar, aba fechada. <b>Sozinho.</b>");
+    await sleep(1100);
+    $("fim-voce").textContent = voce;
+    $("fim-robo").textContent = robo;
+    $("fim-chars").textContent = fmt(Number($("c-chars").textContent.replace(/\./g, "")) || tChars);
+    $("fim").style.display = "flex";
+  });
+})();
+</script>
+</body>
+</html>
